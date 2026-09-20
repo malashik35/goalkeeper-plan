@@ -1,0 +1,2947 @@
+<!doctype html>
+<html lang="ru">
+<head><meta charset="utf8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head>
+<body>
+
+
+<meta charset="utf8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Программа вратарей</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+:root {
+  --bg: #0f1923;
+  --surface: #1a2535;
+  --surface2: #223044;
+  --border: #2d3f55;
+  --accent: #4ade80;
+  --accent-dim: rgba(74,222,128,0.15);
+  --accent-dim2: rgba(74,222,128,0.08);
+  --text: #e8edf2;
+  --text-sec: #7a8fa6;
+  --text-dim: #4a6070;
+  --week1: #3b82f6;
+  --week2: #f59e0b;
+  --week3: #ef4444;
+  --week4: #a855f7;
+  --tag-bg: rgba(74,222,128,0.12);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f0f4f8;
+    --surface: #ffffff;
+    --surface2: #e8eef5;
+    --border: #d0dae6;
+    --text: #0f1923;
+    --text-sec: #4a6070;
+    --text-dim: #8fa3b8;
+    --accent-dim: rgba(22,163,74,0.12);
+    --accent-dim2: rgba(22,163,74,0.06);
+    --accent: #16a34a;
+    --tag-bg: rgba(22,163,74,0.10);
+  }
+}
+:root[data-theme="light"] {
+  --bg: #f0f4f8;
+  --surface: #ffffff;
+  --surface2: #e8eef5;
+  --border: #d0dae6;
+  --text: #0f1923;
+  --text-sec: #4a6070;
+  --text-dim: #8fa3b8;
+  --accent-dim: rgba(22,163,74,0.12);
+  --accent-dim2: rgba(22,163,74,0.06);
+  --accent: #16a34a;
+  --tag-bg: rgba(22,163,74,0.10);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.6}
+body{display:flex;flex-direction:column;min-height:100%}
+
+/* HEADER */
+.top-bar{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:14px 24px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:100;
+  box-shadow:0 2px 12px rgba(0,0,0,.15);
+}
+.top-bar-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;
+  letter-spacing:1px;
+  color:var(--accent);
+  line-height:1;
+}
+.top-bar-sub{
+  font-size:12px;
+  color:var(--text-sec);
+  font-weight:500;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.top-bar-meta{
+  margin-left:auto;
+  display:flex;
+  gap:20px;
+  align-items:center;
+}
+.meta-chip{
+  background:var(--accent-dim);
+  color:var(--accent);
+  font-size:11px;
+  font-weight:600;
+  padding:4px 10px;
+  border-radius:20px;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+/* LAYOUT */
+.layout{
+  display:flex;
+  flex:1;
+  max-width:1200px;
+  width:100%;
+  margin:0 auto;
+  gap:0;
+  margin-top:57px;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:220px;
+  flex-shrink:0;
+  padding:28px 0 28px 24px;
+  position:sticky;
+  top:57px;
+  height:calc(100vh - 57px);
+  overflow-y:auto;
+}
+.sidebar-section{margin-bottom:28px}
+.sidebar-label{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  margin-bottom:10px;
+  padding-left:4px;
+}
+.nav-week{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.nav-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:background .15s;
+  border:none;
+  background:none;
+  color:var(--text-sec);
+  font-size:13px;
+  font-weight:500;
+  text-align:left;
+  width:100%;
+}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--accent-dim);color:var(--accent)}
+.nav-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.nav-sub{
+  padding:4px 10px 4px 28px;
+  font-size:12px;
+  color:var(--text-dim);
+  cursor:pointer;
+  border-radius:6px;
+  transition:background .15s;
+  border:none;background:none;text-align:left;width:100%;
+}
+.nav-sub:hover{background:var(--surface2);color:var(--text-sec)}
+.nav-sub.active{color:var(--accent)}
+
+/* MAIN */
+.main{
+  flex:1;
+  padding:28px 24px;
+  min-width:0;
+}
+
+/* WEEK SECTION */
+.week-block{margin-bottom:56px}
+.week-header{
+  display:flex;
+  align-items:baseline;
+  gap:16px;
+  margin-bottom:24px;
+  padding-bottom:16px;
+  border-bottom:1px solid var(--border);
+}
+.week-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:48px;
+  line-height:1;
+  color:var(--text-dim);
+  letter-spacing:1px;
+}
+.week-info{}
+.week-phase{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:26px;
+  line-height:1;
+  letter-spacing:1px;
+}
+.week-goal{
+  font-size:13px;
+  color:var(--text-sec);
+  margin-top:4px;
+}
+.week-badge{
+  margin-left:auto;
+  font-size:11px;
+  font-weight:700;
+  padding:5px 12px;
+  border-radius:20px;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+/* SESSION GRID */
+.sessions-grid{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  margin-bottom:16px;
+}
+
+/* SESSION CARD */
+.session-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+}
+.session-head{
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border-bottom:1px solid var(--border);
+}
+.session-day{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;
+  letter-spacing:.5px;
+  line-height:1;
+}
+.session-type{
+  font-size:11px;
+  color:var(--text-sec);
+  font-weight:600;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+}
+.session-date{
+  font-size:11px;
+  color:var(--text-dim);
+  font-weight:500;
+  margin-top:1px;
+}
+.session-dur{
+  margin-left:auto;
+  font-size:12px;
+  color:var(--accent);
+  font-weight:700;
+  font-variant-numeric:tabular-nums;
+  background:var(--accent-dim);
+  padding:3px 8px;
+  border-radius:10px;
+}
+
+/* EXERCISE */
+.exercise{border-bottom:1px solid var(--border)}
+.exercise:last-child{border-bottom:none}
+.exercise-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 16px;
+  cursor:pointer;
+  user-select:none;
+  transition:background .15s;
+}
+.exercise-head:hover{background:var(--surface2)}
+.exercise-time{
+  font-size:11px;
+  font-weight:700;
+  color:var(--accent);
+  font-variant-numeric:tabular-nums;
+  min-width:42px;
+  background:var(--accent-dim2);
+  border-radius:6px;
+  padding:2px 6px;
+  text-align:center;
+  flex-shrink:0;
+}
+.exercise-name{
+  font-weight:600;
+  font-size:13px;
+  flex:1;
+}
+.exercise-tag{
+  font-size:10px;
+  padding:2px 7px;
+  border-radius:10px;
+  background:var(--tag-bg);
+  color:var(--accent);
+  font-weight:600;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  flex-shrink:0;
+}
+.exercise-chevron{
+  color:var(--text-dim);
+  font-size:14px;
+  flex-shrink:0;
+  transition:transform .2s;
+}
+.exercise.open .exercise-chevron{transform:rotate(180deg)}
+
+.exercise-body{
+  display:none;
+  padding:0 16px 14px;
+}
+.exercise.open .exercise-body{display:block}
+
+.focus-bar{
+  background:var(--accent-dim);
+  border-left:3px solid var(--accent);
+  padding:8px 12px;
+  border-radius:0 6px 6px 0;
+  font-size:12px;
+  font-weight:600;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+
+.steps{display:flex;flex-direction:column;gap:8px}
+.step{
+  display:flex;
+  gap:10px;
+  font-size:13px;
+  color:var(--text-sec);
+  line-height:1.5;
+}
+.step-n{
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:var(--surface2);
+  color:var(--text-dim);
+  font-size:10px;
+  font-weight:700;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-top:2px;
+  font-variant-numeric:tabular-nums;
+}
+.step-text{flex:1}
+.step-text strong{color:var(--text);font-weight:600}
+.step-actions{
+  display:none;
+  gap:4px;
+  align-items:flex-start;
+  margin-top:2px;
+  flex-shrink:0;
+}
+body.edit-mode .step-actions{display:flex}
+.step-btn{
+  width:20px;height:20px;border-radius:50%;border:none;
+  cursor:pointer;font-size:13px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  line-height:1;padding:0;transition:transform .1s,opacity .15s;
+  flex-shrink:0;font-family:inherit;
+}
+.step-btn:hover{transform:scale(1.15)}
+.step-btn-del{background:#ef4444;color:#fff;}
+.step-btn-add{background:#22c55e;color:#fff;}
+
+.reps-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+.rep-chip{
+  font-size:11px;
+  background:var(--surface2);
+  color:var(--text-sec);
+  padding:3px 9px;
+  border-radius:8px;
+  font-weight:600;
+  font-variant-numeric:tabular-nums;
+}
+.tip{
+  margin-top:10px;
+  font-size:12px;
+  color:var(--text-sec);
+  background:var(--surface2);
+  border-radius:8px;
+  padding:8px 12px;
+  display:flex;gap:8px;
+}
+.tip-icon{flex-shrink:0;font-size:14px}
+
+/* RECOVERY CARD */
+.recovery-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+}
+.recovery-icon{font-size:28px;flex-shrink:0}
+.recovery-title{font-weight:700;font-size:14px;margin-bottom:4px}
+.recovery-text{font-size:13px;color:var(--text-sec);line-height:1.5}
+
+/* WEEKLY NOTE */
+.week-note{
+  margin-top:16px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
+}
+.week-note-title{
+  font-size:12px;
+  font-weight:700;
+  color:var(--accent);
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  margin-bottom:8px;
+}
+.week-note-text{font-size:13px;color:var(--text-sec);line-height:1.6}
+
+/* PSYCH BLOCK */
+.psych-block{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  margin-top:16px;
+  grid-column:1/-1;
+}
+.psych-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px;
+  letter-spacing:.5px;
+  margin-bottom:12px;
+  color:var(--accent);
+}
+.psych-rules{display:flex;flex-direction:column;gap:10px}
+.psych-rule{display:flex;gap:12px;font-size:13px;color:var(--text-sec);line-height:1.5}
+.psych-num{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--accent-dim);color:var(--accent);
+  font-weight:700;font-size:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  margin-top:1px;
+}
+
+/* COLORS per week */
+.w1 .week-num,.w1 .week-phase{color:var(--week1)}
+.w2 .week-num,.w2 .week-phase{color:var(--week2)}
+.w3 .week-num,.w3 .week-phase{color:var(--week3)}
+.w4 .week-num,.w4 .week-phase{color:var(--week4)}
+.w1 .week-badge{background:rgba(59,130,246,.15);color:var(--week1)}
+.w2 .week-badge{background:rgba(245,158,11,.15);color:var(--week2)}
+.w3 .week-badge{background:rgba(239,68,68,.15);color:var(--week3)}
+.w4 .week-badge{background:rgba(168,85,247,.15);color:var(--week4)}
+.w1-dot{background:var(--week1)}
+.w2-dot{background:var(--week2)}
+.w3-dot{background:var(--week3)}
+.w4-dot{background:var(--week4)}
+
+/* scroll offset for anchor */
+.week-block{scroll-margin-top:80px}
+.session-card{scroll-margin-top:80px}
+
+/* SESSION FILTER — all hidden by default, show only active */
+.session-card{
+  display:none;
+}
+.session-card.session-active{
+  display:block;
+}
+.nav-sub.nav-sub-active{
+  color:var(--accent);
+  font-weight:700;
+  background:var(--accent-dim2);
+}
+
+/* Clickable week header */
+.week-header{
+  cursor:pointer;
+  user-select:none;
+  border-radius:12px;
+  transition:background .15s;
+}
+.week-header:hover{background:var(--surface2)}
+.week-header-arrow{
+  font-size:18px;
+  color:var(--text-dim);
+  transition:transform .2s;
+  flex-shrink:0;
+  margin-left:auto;
+  padding-left:12px;
+}
+.week-block.week-open .week-header-arrow{transform:rotate(90deg)}
+
+/* Session picker — shown when week is open */
+.session-picker{
+  display:none;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:12px 0 4px;
+}
+.week-block.week-open .session-picker{display:flex}
+.session-pick-btn{
+  background:var(--surface);
+  border:1px solid var(--border);
+  color:var(--text-sec);
+  font-size:12px;font-weight:600;
+  padding:6px 14px;border-radius:20px;
+  cursor:pointer;transition:all .15s;
+  font-family:inherit;
+}
+.session-pick-btn:hover{border-color:var(--accent);color:var(--accent)}
+.session-pick-btn.active{
+  background:var(--accent);
+  color:#0f1923;
+  border-color:var(--accent);
+}
+
+/* EDIT MODE */
+/* Floating edit controls (bottom-right) */
+.edit-fab{
+  position:fixed;
+  bottom:24px;
+  right:24px;
+  z-index:200;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  align-items:flex-end;
+}
+.cancel-confirm{
+  display:none;
+  background:#1e293b;
+  border:1px solid #ef4444;
+  border-radius:14px;
+  padding:10px 14px;
+  font-size:12px;
+  color:#f1f5f9;
+  white-space:nowrap;
+  box-shadow:0 4px 16px rgba(0,0,0,.4);
+  gap:8px;
+  align-items:center;
+}
+.cancel-confirm.show{display:flex}
+.cancel-confirm-text{flex:1}
+.cancel-confirm-yes{
+  background:#ef4444;color:#fff;border:none;
+  border-radius:8px;padding:4px 10px;cursor:pointer;
+  font-size:12px;font-weight:700;font-family:inherit;
+}
+.cancel-confirm-no{
+  background:transparent;color:#94a3b8;border:1px solid #475569;
+  border-radius:8px;padding:4px 10px;cursor:pointer;
+  font-size:12px;font-family:inherit;
+}
+.fab-buttons{display:flex;gap:8px;align-items:center;}
+.edit-toggle-btn{
+  background:var(--surface);
+  border:1px solid var(--border);
+  color:var(--text-sec);
+  font-size:13px;font-weight:600;
+  padding:10px 18px;border-radius:24px;cursor:pointer;
+  transition:all .15s;white-space:nowrap;
+  box-shadow:0 4px 16px rgba(0,0,0,.25);
+  font-family:inherit;
+}
+.edit-toggle-btn:hover{border-color:var(--accent);color:var(--accent)}
+.edit-toggle-btn.active{
+  background:rgba(245,158,11,.15);border-color:#f59e0b;color:#f59e0b;
+}
+.save-all-btn{
+  background:#f59e0b;color:#0f1923;border:none;
+  font-size:13px;font-weight:700;padding:10px 18px;
+  border-radius:24px;cursor:pointer;
+  white-space:nowrap;
+  display:none;
+  box-shadow:0 4px 16px rgba(245,158,11,.35);
+  font-family:inherit;
+}
+body.edit-mode .save-all-btn{display:inline-block!important}
+.save-all-btn:disabled{opacity:.6;cursor:not-allowed}
+
+/* Editable fields */
+body.edit-mode [data-editable]{
+  outline:1px dashed rgba(245,158,11,.4);
+  border-radius:3px;cursor:text;
+  min-width:20px;display:inline-block;
+}
+body.edit-mode [data-editable]:hover{
+  outline-color:#f59e0b;background:rgba(245,158,11,.06);
+}
+body.edit-mode [data-editable]:focus{
+  outline:2px solid #f59e0b;background:rgba(245,158,11,.08);
+  border-radius:3px;
+}
+[data-editable]:empty:before{
+  content:attr(data-placeholder);
+  color:var(--text-dim);font-style:italic;
+}
+
+/* NOTES */
+.notes-section{
+  margin-top:10px;
+  border-top:1px solid var(--border);
+  padding-top:10px;
+}
+.note{
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  padding:7px 10px;
+  background:rgba(245,158,11,0.08);
+  border-left:3px solid #f59e0b;
+  border-radius:0 6px 6px 0;
+  margin-bottom:6px;
+  font-size:12px;
+  color:var(--text-sec);
+  line-height:1.5;
+  position:relative;
+}
+.note-icon{flex-shrink:0;font-size:13px}
+.note-text{flex:1;white-space:pre-wrap;word-break:break-word}
+.note-del{
+  position:absolute;right:6px;top:5px;
+  background:none;border:none;
+  color:var(--text-dim);cursor:pointer;
+  font-size:14px;line-height:1;
+  display:none;
+  padding:2px 4px;border-radius:4px;
+}
+.note:hover .note-del{display:block}
+.note-del:hover{background:rgba(239,68,68,.15);color:#ef4444}
+.add-note-btn{
+  display:flex;align-items:center;gap:6px;
+  background:none;border:1px dashed var(--border);
+  color:var(--text-dim);font-size:11px;font-weight:600;
+  padding:5px 10px;border-radius:6px;cursor:pointer;
+  width:100%;margin-top:4px;transition:all .15s;
+  letter-spacing:.03em;
+}
+.add-note-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim2)}
+.note-form{
+  display:none;margin-top:8px;
+}
+.note-form.open{display:block}
+.note-textarea{
+  width:100%;background:var(--surface2);border:1px solid var(--border);
+  color:var(--text);font-family:inherit;font-size:12px;
+  border-radius:6px;padding:8px 10px;resize:vertical;
+  min-height:60px;outline:none;line-height:1.5;
+}
+.note-textarea:focus{border-color:var(--accent)}
+.note-actions{
+  display:flex;gap:8px;margin-top:6px;justify-content:flex-end;
+}
+.note-save{
+  background:var(--accent);color:#0f1923;border:none;
+  font-size:12px;font-weight:700;padding:5px 14px;
+  border-radius:6px;cursor:pointer;
+}
+.note-save:disabled{opacity:.5;cursor:not-allowed}
+.note-cancel{
+  background:var(--surface2);color:var(--text-sec);border:none;
+  font-size:12px;padding:5px 12px;border-radius:6px;cursor:pointer;
+}
+.save-status{
+  position:fixed;bottom:80px;right:24px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:10px 16px;
+  font-size:13px;font-weight:600;
+  display:none;z-index:300;
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
+}
+.save-status.show{display:block}
+.save-status.ok{color:var(--accent);border-color:var(--accent)}
+.save-status.err{color:#ef4444;border-color:#ef4444}
+.admin-login{
+  display:flex;gap:6px;align-items:center;
+  background:#1e293b;border:1px solid #334155;
+  border-radius:14px;padding:8px 12px;
+  box-shadow:0 4px 16px rgba(0,0,0,.4);
+}
+.admin-login input{
+  background:#0f172a;border:1px solid #475569;color:#f1f5f9;
+  border-radius:8px;padding:5px 10px;font-size:12px;
+  font-family:inherit;width:130px;outline:none;
+}
+.admin-login input::placeholder{color:#64748b}
+.admin-login-btn{
+  background:#3b82f6;color:#fff;border:none;
+  border-radius:8px;padding:5px 12px;cursor:pointer;
+  font-size:12px;font-weight:700;font-family:inherit;
+  white-space:nowrap;
+}
+.edit-mode-banner{
+  display:none;
+  position:sticky;top:57px;
+  z-index:90;
+  background:rgba(245,158,11,.12);
+  border-bottom:2px solid #f59e0b;
+  padding:8px 24px;
+  font-size:12px;font-weight:600;
+  color:#f59e0b;
+  text-align:center;
+}
+.edit-mode-banner.show{display:block}
+body.can-edit .add-note-btn{display:flex}
+body:not(.can-edit) .add-note-btn{display:none}
+body:not(.can-edit) .note-del{display:none!important}
+
+@media(max-width:800px){
+  .sidebar{display:none}
+  .main{padding:16px}
+  .top-bar{padding:12px 16px}
+  body{font-size:14px}
+  .week-num{font-size:36px}
+  .week-phase{font-size:20px}
+}
+</style>
+
+
+
+<div class="edit-mode-banner" id="edit-banner">✏️ Режим редактирования — ваши пометки сохраняются для всех по ссылке</div>
+<div class="save-status" id="save-status"></div>
+
+<div class="top-bar">
+  <div>
+    <div class="top-bar-logo">🧤 Вратарские тренировки</div>
+    <div class="top-bar-sub">Футзал · 22 сен — 17 окт 2026 · девушки до 23 лет</div>
+  </div>
+  <div class="top-bar-meta">
+    <span class="meta-chip">Вт + Чт · 40 мин</span>
+    <span class="meta-chip">Сб · восстановление</span>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Навигация</div>
+      <div class="nav-week">
+        <button class="nav-item" onclick="gotoWeek('w1')"><span class="nav-dot w1-dot"></span>Неделя 1 — База</button>
+        <button class="nav-sub" id="nav-w1-vt" onclick="gotoSession('w1-vt',this)">Вт 22.09</button>
+        <button class="nav-sub" id="nav-w1-chet" onclick="gotoSession('w1-chet',this)">Чт 24.09</button>
+        <button class="nav-sub" id="nav-w1-sb" onclick="gotoSession('w1-sb',this)">Сб 26.09</button>
+        <button class="nav-item" onclick="gotoWeek('w2')"><span class="nav-dot w2-dot"></span>Неделя 2 — Нагрузка</button>
+        <button class="nav-sub" id="nav-w2-vt" onclick="gotoSession('w2-vt',this)">Вт 29.09</button>
+        <button class="nav-sub" id="nav-w2-chet" onclick="gotoSession('w2-chet',this)">Чт 01.10</button>
+        <button class="nav-sub" id="nav-w2-sb" onclick="gotoSession('w2-sb',this)">Сб 03.10</button>
+        <button class="nav-item" onclick="gotoWeek('w3')"><span class="nav-dot w3-dot"></span>Неделя 3 — Качество</button>
+        <button class="nav-sub" id="nav-w3-vt" onclick="gotoSession('w3-vt',this)">Вт 06.10</button>
+        <button class="nav-sub" id="nav-w3-chet" onclick="gotoSession('w3-chet',this)">Чт 08.10</button>
+        <button class="nav-sub" id="nav-w3-sb" onclick="gotoSession('w3-sb',this)">Сб 10.10</button>
+        <button class="nav-item" onclick="gotoWeek('w4')"><span class="nav-dot w4-dot"></span>Неделя 4 — Пик</button>
+        <button class="nav-sub" id="nav-w4-vt" onclick="gotoSession('w4-vt',this)">Вт 13.10</button>
+        <button class="nav-sub nav-sub-active" id="nav-w4-chet" onclick="gotoSession('w4-chet',this)">Чт 15.10</button>
+        <button class="nav-sub" id="nav-w4-sb" onclick="gotoSession('w4-sb',this)">Сб 17.10</button>
+        <button class="nav-item" onclick="goto('psych')">🧠 Психология</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <!-- ══════════════════════ НЕДЕЛЯ 1 ══════════════════════ -->
+    <div class="week-block w1" id="w1">
+      <div class="week-header" onclick="toggleWeek('w1')">
+        <div class="week-num">01</div>
+        <div class="week-info">
+          <div class="week-phase">База</div>
+          <div class="week-goal" data-editable="" contenteditable="false" data-placeholder="Цель недели...">22–26 сентября · Привыкание к паркету · правильная техника · никакого давления</div>
+        </div>
+        <div class="week-badge">Техника</div>
+        <span class="week-header-arrow">›</span>
+      </div>
+      <div class="session-picker">
+        <button class="session-pick-btn" id="pick-w1-vt" onclick="gotoSession('w1-vt',this)">Вт 22.09</button>
+        <button class="session-pick-btn" id="pick-w1-chet" onclick="gotoSession('w1-chet',this)">Чт 24.09</button>
+        <button class="session-pick-btn" id="pick-w1-sb" onclick="gotoSession('w1-sb',this)">Сб 26.09</button>
+      </div>
+
+      <div class="sessions-grid">
+        <!-- В1 Вторник -->
+        <div class="session-card" id="w1-vt">
+          <div class="session-head">
+            <div><div class="session-day">Вторник</div><div class="session-type">Адаптация — первое знакомство с паркетом</div><div class="session-date">22 сентября 2026</div></div>
+            <div class="session-dur">40 мин</div>
+          </div>
+
+          <!-- ПУНКТ 0 -->
+          <div class="exercise open">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">до начала</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Бег и беговые с полевыми</span>
+              <span class="exercise-tag">Общая работа</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Вратари выполняют общую беговую разминку вместе с командой</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага...">Бег в общем объёме с полевыми игроками: лёгкий бег, ускорения, беговые упражнения (захлёст, высокое бедро, приставной). Темп и объём — по плану тренера команды.</div></div>
+              </div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <!-- РАЗМИНКА -->
+          <div class="exercise open">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">0–7</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Разминка</span>
+              <span class="exercise-tag">Разминка</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Активируем суставы, включаем мяч в руки — без давления, первое знакомство</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>2 мин — суставная гимнастика:</strong> вращения запястий, плеч, бёдер, голеностопа стоя. На паркете голеностоп нагружается иначе — не торопиться</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>3 мин — броски в парах с 5 м:</strong> вратари стоят друг напротив друга, перебрасывают мяч руками — верхом, снизу, сбоку. Просто ловят и сразу возвращают. Темп спокойный.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>2 мин — приставные шаги:</strong> вдоль линии 5 м влево-вправо × 3 серии. Шаг лёгкий, скользящий — привыкаем к паркету.</div></div>
+              </div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <!-- ПОДВОДЯЩЕЕ -->
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">7–22</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Ловля по трём зонам</span>
+              <span class="exercise-tag">Подводящее</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Упор: захват мяча в разных точках, базовая стойка</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Расстановка:</strong> одна — в воротах, другая — в 10–12 м перед ней с мячами.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Серия А (5 мин):</strong> подающая поочерёдно катит по полу, бросает в живот, бросает дугой верхом. Вратарь ловит и сразу возвращает руками. <strong>Верх:</strong> руки вперёд-вверх навстречу мячу, большие пальцы вместе сзади — не ловить у лица.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>12 мячей → меняются → ещё 12.</strong></div></div>
+                <div class="step"><div class="step-n">4</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Серия Б (5 мин):</strong> вратарь делает 2 приставных шага вбок — подающая в этот момент бросает в <em>противоположную</em> сторону. Тренирует торможение и перестройку.</div></div>
+              </div>
+              <div class="reps-row">
+                <span class="rep-chip">× 10 влево</span>
+                <span class="rep-chip">× 10 вправо</span>
+                <span class="rep-chip">меняются</span>
+              </div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <!-- ОСНОВНОЕ -->
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">22–40</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Игра ногами в одно касание</span>
+              <span class="exercise-tag">Основное</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Упор: первое касание, уверенность с мячом под ногами</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>7 мин — с остановкой:</strong> стоят в 12 м, катят мяч друг другу. Принять → остановить → вернуть внутренней стороной стопы. × 10 пар на каждую.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>5 мин — одно касание:</strong> то же расстояние, но возврат без остановки. Мяч пришёл — сразу ногой обратно. × 10 пар.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>6 мин — выбивание с рук:</strong> вратарь берёт мяч в руки, выбивает партнёрке на ход. Начать с 15 м, потом 20 м. Акцент на точность, не на силу. × 8 каждой.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">💡</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">Типичная ошибка: торопиться при остановке. Сначала уверенная обработка — потом скорость.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <!-- СКР -->
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">заминка</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">СКР — самоконтроль и саморегуляция</span>
+              <span class="exercise-tag">Психология</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">15–20 секунд: проверяем состояние тела и возвращаемся в рабочий режим</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>После завершения работы:</strong> встать, остановиться на 15–20 секунд. Задать себе три вопроса: «Мышцы — зажаты или расслаблены?», «Дыхание — ровное или задержанное?», «Выражение лица — напряжённое или нейтральное?»</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Если есть напряжение:</strong> расслабить мышцы (встряхнуть руки и плечи), улыбнуться — это физически снимает мышечный тонус лица, затем 2–3 глубоких вдоха с удлинённым выдохом: вдох 3 сек → выдох 5 сек.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Ритмичное дыхание (если нужно):</strong> вдох → задержка 2 сек → выдох длиннее вдоха. Повторить 3–4 раза. Это сигнал нервной системе: «ситуация под контролем». Навык применять и в матче — особенно после пропущенного гола.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">🧠</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">СКР — это не расслабление, это управление. Вратарь которая умеет быстро вернуться в рабочее состояние — стабильнее на протяжении всей игры.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+        </div>
+
+        <!-- В1 Четверг -->
+        <div class="session-card" id="w1-chet">
+          <div class="session-head">
+            <div><div class="session-day">Четверг</div><div class="session-type">Начало нагрузки — падения + реакция</div><div class="session-date">24 сентября 2026</div></div>
+            <div class="session-dur">40 мин</div>
+          </div>
+
+          <!-- ПУНКТ 0 -->
+          <div class="exercise open">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">до начала</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Бег и беговые с полевыми</span>
+              <span class="exercise-tag">Общая работа</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Вратари выполняют общую беговую разминку вместе с командой</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага...">Бег в общем объёме с полевыми игроками: лёгкий бег, ускорения, беговые упражнения (захлёст, высокое бедро, приставной). Темп и объём — по плану тренера команды.</div></div>
+              </div>
+              <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise open">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">0–7</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Разминка</span>
+              <span class="exercise-tag">Разминка</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Активируем плечи и бёдра — основные зоны при дайвинге</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>3 мин:</strong> круговые движения плечами, вращения рук вперёд-назад, захваты пальцами.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>2 мин:</strong> из стойки медленные наклоны к каждой ноге, тянем паховые мышцы — зона нагрузки при дайвинге.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>2 мин:</strong> лёгкие броски в парах с 6 м — включаем руки перед работой.</div></div>
+              </div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">7–17</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Техника падения — без давления</span>
+              <span class="exercise-tag">Подводящее</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Упор: правильная укладка на паркете, без травм</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>4 мин — без мяча:</strong> из стойки медленно уходим в падение на бок — <strong>бедро → бок → плечо.</strong> Тело после касания скользит само — не тормозить руками об пол. × 5 на каждую сторону. Темп медленный.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>6 мин — с мячом:</strong> тренер катит мяч в угол с 8 м. Вратарь уходит в бросок и ловит. После падения — зафиксировать мяч на секунду, потом встать. Не вскакивать сразу.</div></div>
+              </div>
+              <div class="reps-row">
+                <span class="rep-chip">× 8 влево</span>
+                <span class="rep-chip">× 8 вправо</span>
+                <span class="rep-chip">меняются</span>
+              </div>
+              <div class="tip"><span class="tip-icon">⚠️</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">На паркете тело скользит после падения — это нормально и помогает. Главная ошибка: падать на прямую руку.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">17–40</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Броски в углы + серия без паузы</span>
+              <span class="exercise-tag">Основное</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Упор: скорость восстановления стойки между мячами</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>10 мин — броски по зонам:</strong> тренер бьёт с 10 м поочерёдно в нижние и верхние углы. После каждого мяча — сразу встать и вернуться в центр. × 10 нижних + × 8 верхних на каждую.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>13 мин — серия 3 мяча:</strong> тренер бьёт с паузой 4 сек: <em>низ → верх → любой.</em> Вратарь после каждого мяча встаёт, в стойку, готова. × 5 серий на каждую. Пауза между сериями 20 сек.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">💡</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">Не смотреть, куда улетел мяч. Поймала/отбила — сразу взгляд вперёд, стойка.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <!-- СКР -->
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">заминка</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">СКР — самоконтроль и саморегуляция</span>
+              <span class="exercise-tag">Психология</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">15–20 секунд: проверяем состояние тела и возвращаемся в рабочий режим</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>После завершения работы:</strong> встать, остановиться на 15–20 секунд. Задать себе три вопроса: «Мышцы — зажаты или расслаблены?», «Дыхание — ровное или задержанное?», «Выражение лица — напряжённое или нейтральное?»</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Если есть напряжение:</strong> расслабить мышцы (встряхнуть руки и плечи), улыбнуться — это физически снимает мышечный тонус лица, затем 2–3 глубоких вдоха с удлинённым выдохом: вдох 3 сек → выдох 5 сек.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Ритмичное дыхание (если нужно):</strong> вдох → задержка 2 сек → выдох длиннее вдоха. Повторить 3–4 раза. Это сигнал нервной системе: «ситуация под контролем». Навык применять и в матче — особенно после пропущенного гола.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">🧠</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">СКР — это не расслабление, это управление. Вратарь которая умеет быстро вернуться в рабочее состояние — стабильнее на протяжении всей игры.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Суббота -->
+      <div class="session-card" id="w1-sb" style="margin-top:16px">
+        <div class="session-head">
+          <div><div class="session-day">Суббота</div><div class="session-type">Восстановление — База</div><div class="session-date">26 сентября 2026</div></div>
+          <div class="session-dur">25 мин</div>
+        </div>
+
+        <div class="exercise open">
+          <div class="exercise-head" onclick="toggle(this)">
+            <span class="exercise-time">0–10</span>
+            <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Растяжка всего тела</span>
+            <span class="exercise-tag">Восстановление</span>
+            <span class="exercise-chevron">▾</span>
+          </div>
+          <div class="exercise-body">
+            <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Снимаем напряжение с паха, голеностопа и плеч после паркета</div>
+            <div class="steps">
+              <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Пах (3 мин):</strong> сесть в широкий выпад, медленно наклониться к колену, задержать 30 сек. Поменять. Затем «бабочка» — сидя, стопы вместе, плавно нажать локтями на колени вниз.</div></div>
+              <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Голеностоп (3 мин):</strong> сесть на пол, медленные круговые вращения каждой стопой × 10, потом тянуть носок к себе 20 сек. Паркет нагружает голеностоп непривычно — здесь важно разобраться.</div></div>
+              <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Плечи и шея (4 мин):</strong> медленные круги плечами назад × 10, наклоны головы к плечу по 30 сек, руку за голову и тянуть трицепс 20 сек каждой.</div></div>
+            </div>
+            <div class="tip"><span class="tip-icon">🌿</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">Всё медленно, без рывков. Если где-то неприятно — не тянуть дальше, просто держать позицию.</span></div>
+          <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+        </div>
+
+        <div class="exercise open">
+          <div class="exercise-head" onclick="toggle(this)">
+            <span class="exercise-time">10–20</span>
+            <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Лёгкие броски — привыкание к рукам</span>
+            <span class="exercise-tag">Мяч</span>
+            <span class="exercise-chevron">▾</span>
+          </div>
+          <div class="exercise-body">
+            <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Держать мяч в руках — без задачи, просто приятная работа</div>
+            <div class="steps">
+              <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>5 мин — броски в парах с 5–6 м:</strong> медленно, навесом, снизу — как хочется. Поймал — вернул. Никакого темпа, никаких заданий. Разговаривать можно.</div></div>
+              <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>5 мин — с низкой подачи:</strong> тренер катит мяч по полу — вратарь поднимает с земли двумя руками. Тренирует захват и привыкание к паркету без падений. Спокойный темп.</div></div>
+            </div>
+          <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+        </div>
+
+        <div class="exercise open">
+          <div class="exercise-head" onclick="toggle(this)">
+            <span class="exercise-time">20–25</span>
+            <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Разговор — что было новым на этой неделе</span>
+            <span class="exercise-tag">Корректировка</span>
+            <span class="exercise-chevron">▾</span>
+          </div>
+          <div class="exercise-body">
+            <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Фиксируем первые впечатления от паркета — без оценок</div>
+            <div class="steps">
+              <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Каждый вратарь отвечает на два вопроса:</strong> «Что на паркете ощущается иначе, чем ожидал?» и «Что из этой недели было удобно, а что — непривычно?».</div></div>
+              <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Тренер слушает и фиксирует</strong> — не исправляет, а запоминает на следующую неделю. Эта суббота — сбор информации, не разбор полётов.</div></div>
+            </div>
+            <div class="tip"><span class="tip-icon">💡</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">Первое впечатление самое ценное. То, что они скажут сегодня — поправить проще всего, пока тело ещё не привыкло неправильно.</span></div>
+          <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ НЕДЕЛЯ 2 ══════════════════════ -->
+    <div class="week-block w2" id="w2">
+      <div class="week-header" onclick="toggleWeek('w2')">
+        <div class="week-num">02</div>
+        <div class="week-info">
+          <div class="week-phase">Нагрузка</div>
+          <div class="week-goal" data-editable="" contenteditable="false" data-placeholder="Цель недели...">29 сен — 3 окт · Интенсивность и объём · выносливость через темп · первые серии под давлением</div>
+        </div>
+        <div class="week-badge">Интенсивность</div>
+        <span class="week-header-arrow">›</span>
+      </div>
+      <div class="session-picker">
+        <button class="session-pick-btn" id="pick-w2-vt" onclick="gotoSession('w2-vt',this)">Вт 29.09</button>
+        <button class="session-pick-btn" id="pick-w2-chet" onclick="gotoSession('w2-chet',this)">Чт 01.10</button>
+        <button class="session-pick-btn" id="pick-w2-sb" onclick="gotoSession('w2-sb',this)">Сб 03.10</button>
+      </div>
+
+      <div class="sessions-grid">
+        <!-- В2 Вторник -->
+        <div class="session-card" id="w2-vt">
+          <div class="session-head">
+            <div><div class="session-day">Вторник</div><div class="session-type">Полная нагрузка — скорость + игра ногами</div><div class="session-date">29 сентября 2026</div></div>
+            <div class="session-dur">50 мин</div>
+          </div>
+
+          <!-- ПУНКТ 0 -->
+          <div class="exercise open">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">до начала</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Бег и беговые с полевыми</span>
+              <span class="exercise-tag">Общая работа</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Вратари выполняют общую беговую разминку вместе с командой</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага...">Бег в общем объёме с полевыми игроками: лёгкий бег, ускорения, беговые упражнения (захлёст, высокое бедро, приставной). Темп и объём — по плану тренера команды.</div></div>
+              </div>
+              <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise open">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">0–6</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Разминка</span>
+              <span class="exercise-tag">Разминка</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Активируем быстрые мышцы — неделя на скорость ног</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>2 мин — суставная гимнастика</strong> в быстром темпе: вращения, махи ног вперёд-назад-в стороны.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>2 мин — частые касания пола:</strong> быстрые маленькие шаги на месте, как боксёр. Руки работают синхронно. Задача — максимальная частота, не высота шага.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>2 мин — приставные с ускорением:</strong> 4 м вбок, последние 1.5 м — максимальное ускорение + резкая остановка в стойку. × 4 в каждую сторону.</div></div>
+              </div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">6–20</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Лестница + мяч на выходе</span>
+              <span class="exercise-tag">Подводящее</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Упор: переключение из движения в готовность поймать</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Если нет лестницы:</strong> разложить 5–6 конусов с шагом 60 см или нарисовать мелом клетки.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Проход 1 (4 мин):</strong> обе ноги в каждую клетку, максимальная скорость. На выходе — тренер сразу бросает мяч. Вратарь ловит без паузы. × 8 проходов на каждую. Пауза между проходами 10 сек.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Проход 2 (4 мин):</strong> то же, но боковой вход — приставным шагом через каждую клетку. Имитирует реальное движение вдоль ворот. × 6 проходов.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">💡</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">Руки при беге по лестнице работают как при спринте — это держит темп ног.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">20–40</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Серия 5 мячей без остановки</span>
+              <span class="exercise-tag">Основное</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Упор: выносливость и скорость восстановления стойки</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Схема:</strong> тренер бьёт 5 мячей подряд с паузой 3 сек между каждым. Вратарь после каждого мяча встаёт, возвращается в центр ворот, стойка — и готова к следующему. Пауза между сериями 20 сек.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>× 4 серии на каждого вратаря.</strong> Пока одна работает — вторая собирает мячи и подаёт.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Стартовые ускорения (последние 5 мин):</strong> тренер показывает рукой — вратарь взрывным шагом уходит туда, касается конуса в 3 м, возвращается в стойку. × 10 на каждую. Пауза 5 сек.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">⚠️</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">Важен именно первый шаг — он должен быть резким. Толчок от опорной ноги, не «шаркание».</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <!-- АНТИЦИПАЦИЯ -->
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">40–47</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Антиципация — читай нападающего</span>
+              <span class="exercise-tag">Ситуативное</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Упор: держать позицию и читать опорную ногу — не реагировать на финт, а видеть факты</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Упражнение «Читай нападающего»:</strong> второй вратарь разбегается и делает финт в одну сторону, удар — в другую. Задача первой вратарки: не двигаться на финт, удерживать позицию и читать <em>опорную ногу</em> — куда носок опорной, туда мяч. × 3–4 серии по 6 повторений. Пауза между сериями 15 сек. После каждого повторения — тренер спрашивает: «Куда смотрела?»</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">🧠</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">Финт — это обман. Опорная нога — это правда. Тренируем смотреть на правду, а не на обман.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <!-- ИГРА НОГАМИ после нагрузки -->
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">47–57</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Игра ногами после нагрузки</span>
+              <span class="exercise-tag">Игра ногами</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Упор: точность передач в условиях усталости — именно так это происходит в игре</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>3 мин — удары внутренней стопой в парах с 12 м:</strong> принять мяч — остановить — вернуть точно партнёру. Темп спокойный, акцент на точность. Уставшее тело не прощает неаккуратного удара — это и есть задача.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>4 мин — выбивание с рук на точность:</strong> вратарь берёт мяч в руки, выбивает партнёрке в ноги с 16–18 м. Партнёрка принимает и возвращает. Акцент: не сила — попасть в зону. × 6 каждой.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>3 мин — пас в движении:</strong> одна бежит к конусу в 6 м, разворачивается — вторая даёт мяч под ход. Принять в движении и сразу вернуть. Меняются через 4 повторения.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">💡</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">После нагрузки тело хочет торопиться или расслабиться — оба варианта ломают технику. Держим рабочий ритм, не торопимся.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <!-- СКР -->
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">заминка</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">СКР — самоконтроль и саморегуляция</span>
+              <span class="exercise-tag">Психология</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">15–20 секунд: проверяем состояние тела и возвращаемся в рабочий режим</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>После завершения работы:</strong> встать, остановиться на 15–20 секунд. Задать себе три вопроса: «Мышцы — зажаты или расслаблены?», «Дыхание — ровное или задержанное?», «Выражение лица — напряжённое или нейтральное?»</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Если есть напряжение:</strong> расслабить мышцы (встряхнуть руки и плечи), улыбнуться — это физически снимает мышечный тонус лица, затем 2–3 глубоких вдоха с удлинённым выдохом: вдох 3 сек → выдох 5 сек.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Ритмичное дыхание (если нужно):</strong> вдох → задержка 2 сек → выдох длиннее вдоха. Повторить 3–4 раза. Это сигнал нервной системе: «ситуация под контролем». Навык применять и в матче — особенно после пропущенного гола.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">🧠</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">СКР — это не расслабление, это управление. Вратарь которая умеет быстро вернуться в рабочее состояние — стабильнее на протяжении всей игры.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+        </div>
+
+        <!-- В2 Четверг -->
+        <div class="session-card" id="w2-chet">
+          <div class="session-head">
+            <div><div class="session-day">Четверг</div><div class="session-type">Нагрузка + работа с мячом</div><div class="session-date">1 октября 2026</div></div>
+            <div class="session-dur">50 мин</div>
+          </div>
+
+          <!-- ПУНКТ 0 -->
+          <div class="exercise open">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">до начала</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Бег и беговые с полевыми</span>
+              <span class="exercise-tag">Общая работа</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Вратари выполняют общую беговую разминку вместе с командой</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага...">Бег в общем объёме с полевыми игроками: лёгкий бег, ускорения, беговые упражнения (захлёст, высокое бедро, приставной). Темп и объём — по плану тренера команды.</div></div>
+              </div>
+              <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise open">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">0–6</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Разминка</span>
+              <span class="exercise-tag">Разминка</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Подготовка голеностопа и пятки — ударная работа ногами</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>3 мин:</strong> вращения голеностопа стоя на одной ноге × 10 каждого, перекаты с пятки на носок × 20, подъёмы на носках × 15.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>3 мин:</strong> лёгкие удары по мячу внутренней стороной стопы с расстояния 5 м друг другу. Не стараться сильно — просто разбудить ногу.</div></div>
+              </div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">6–20</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Передачи под прессингом времени</span>
+              <span class="exercise-tag">Подводящее</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Упор: уверенность с мячом когда некогда думать</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>5 мин — с остановкой:</strong> тренер катит мяч с 15 м, вратарь принимает и возвращает внутренней стопой. Нарастающий темп каждые 2 минуты.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>5 мин — одно касание:</strong> то же, но без остановки мяча. Мяч пришёл — сразу обратно. × 15 передач на каждую.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>4 мин — выбивание на точность:</strong> конус стоит на 15 м, потом 20 м, потом 25 м. Вратарь выбивает с рук — задача попасть в конус или рядом. × 8 ударов с каждой дистанции.</div></div>
+              </div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">20–40</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Комбо: ногами → ловля</span>
+              <span class="exercise-tag">Основное</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Упор: переключение из «полевого» режима в режим вратаря</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Схема одного эпизода:</strong> вратарь выбивает мяч тренеру ногой → тренер сразу бьёт обратно в ворота (низом, верхом или навесом) → вратарь ловит или отбивает.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Пауза между эпизодами — 5 сек.</strong> Подряд без долгих пауз — это нагрузка на переключение внимания.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>× 8 эпизодов на каждого вратаря.</strong> Последние 5 мин: тренер бьёт вразнобой без предупреждения куда — вратарь реагирует.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">💡</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">После удара ногой не расслабляться — сразу вернуться в стойку. В матче так и будет.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <!-- АНТИЦИПАЦИЯ -->
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">40–47</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Антиципация — удар из-за укрытия</span>
+              <span class="exercise-tag">Ситуативное</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Упор: реагировать на момент выхода нападающего, а не ждать удара</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Упражнение «Удар из-за укрытия»:</strong> конус ставится в 10–12 м от ворот. Второй вратарь прячется за конус с мячом — первая стоит в воротах и не видит мяча. Нападающий выходит из-за укрытия и сразу бьёт без паузы. Вратарь обязана принять стойку готовности в момент появления нападающего — не ждать замаха. × 3 серии по 5 повторений. Менять сторону выхода.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">⚠️</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">Типичная ошибка — расслабиться пока нападающий не виден. Правило: «Не вижу мяч — значит опасность». Всегда в стойке готовности.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <!-- РАБОТА С МЯЧОМ после нагрузки -->
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">47–57</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Работа с мячом после нагрузки</span>
+              <span class="exercise-tag">Работа с мячом</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Упор: ловля и отбивы в условиях усталости — работаем над техникой когда тяжело</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>4 мин — ловля из-за усталости:</strong> тренер бьёт средней силы в разные зоны (без серий, с паузой 5 сек). Вратарь ловит и сразу возвращает. Акцент: руки впереди тела, не сзади. × 10 на каждую.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>3 мин — выход на прострел:</strong> тренер катит мяч вдоль ворот справа и слева — вратарь выходит на перехват, накрывает двумя руками. × 6 с каждой стороны. Темп — рабочий, не форсируем.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>3 мин — навесы от угла:</strong> тренер навешивает с угла поля, вратарь выбирает — ловить или кулаком. После каждого действия — вслух: «мяч мой» или «выбиваю». Осознанность + голос.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">💡</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">Когда устала — первое что страдает это движение рук навстречу мячу. Следи: руки вперёд, не жди мяч у груди.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <!-- СКР -->
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">заминка</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">СКР — самоконтроль и саморегуляция</span>
+              <span class="exercise-tag">Психология</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">15–20 секунд: проверяем состояние тела и возвращаемся в рабочий режим</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>После завершения работы:</strong> встать, остановиться на 15–20 секунд. Задать себе три вопроса: «Мышцы — зажаты или расслаблены?», «Дыхание — ровное или задержанное?», «Выражение лица — напряжённое или нейтральное?»</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Если есть напряжение:</strong> расслабить мышцы (встряхнуть руки и плечи), улыбнуться — это физически снимает мышечный тонус лица, затем 2–3 глубоких вдоха с удлинённым выдохом: вдох 3 сек → выдох 5 сек.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Ритмичное дыхание (если нужно):</strong> вдох → задержка 2 сек → выдох длиннее вдоха. Повторить 3–4 раза. Это сигнал нервной системе: «ситуация под контролем». Навык применять и в матче — особенно после пропущенного гола.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">🧠</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">СКР — это не расслабление, это управление. Вратарь которая умеет быстро вернуться в рабочее состояние — стабильнее на протяжении всей игры.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="session-card" id="w2-sb" style="margin-top:16px">
+        <div class="session-head">
+          <div><div class="session-day">Суббота</div><div class="session-type">Восстановление — после нагрузки</div><div class="session-date">3 октября 2026</div></div>
+          <div class="session-dur">25 мин</div>
+        </div>
+
+        <div class="exercise open">
+          <div class="exercise-head" onclick="toggle(this)">
+            <span class="exercise-time">0–10</span>
+            <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Глубокая растяжка ног и поясницы</span>
+            <span class="exercise-tag">Восстановление</span>
+            <span class="exercise-chevron">▾</span>
+          </div>
+          <div class="exercise-body">
+            <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Неделя была интенсивной — снимаем накопленное напряжение в ногах</div>
+            <div class="steps">
+              <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Квадрицепс (2 мин):</strong> стоя, одна рука за стену, тянем стопу к ягодице. 40 сек каждой ногой × 2 раза. Медленно.</div></div>
+              <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Задняя поверхность бедра (3 мин):</strong> лечь на спину, одну ногу поднять, тянуть к себе держась за бедро. 30 сек каждой × 3.</div></div>
+              <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Поясница (3 мин):</strong> лечь на спину, подтянуть оба колена к груди, покачаться медленно влево-вправо. Потом — одно колено к груди, другая нога прямая, 30 сек. Поменять.</div></div>
+              <div class="step"><div class="step-n">4</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Икры (2 мин):</strong> встать, одна нога вперёд в выпад, пятка задней ноги на полу. Тянуть 30 сек каждой × 2. После интенсивной работы ног икры часто забитые.</div></div>
+            </div>
+          <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+        </div>
+
+        <div class="exercise open">
+          <div class="exercise-head" onclick="toggle(this)">
+            <span class="exercise-time">10–18</span>
+            <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Лёгкие броски + коррекция захвата</span>
+            <span class="exercise-tag">Мяч</span>
+            <span class="exercise-chevron">▾</span>
+          </div>
+          <div class="exercise-body">
+            <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Работа с мячом без интенсивности — исправляем мелкие ошибки</div>
+            <div class="steps">
+              <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>4 мин — броски верхом с 7 м:</strong> спокойный темп, акцент на правильный захват. Если на этой неделе была ошибка в ловле — здесь тренер тихо покажет как правильно. Без повторений, просто — «вот так».</div></div>
+              <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>4 мин — катящиеся мячи:</strong> поднимать с пола двумя руками — захват снизу, мяч к животу. Медленно и осознанно. Типичная ошибка в матче — торопиться при подборе.</div></div>
+            </div>
+            <div class="tip"><span class="tip-icon">💡</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">Суббота — не тренировка на объём. Один правильный разобранный момент стоит десяти повторений.</span></div>
+          <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+        </div>
+
+        <div class="exercise open">
+          <div class="exercise-head" onclick="toggle(this)">
+            <span class="exercise-time">18–25</span>
+            <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Прогресс-минута — каждая сама</span>
+            <span class="exercise-tag">Корректировка</span>
+            <span class="exercise-chevron">▾</span>
+          </div>
+          <div class="exercise-body">
+            <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Строим внутреннюю точку опоры — она важна в матче</div>
+            <div class="steps">
+              <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Каждый вратарь называет вслух:</strong> одну вещь, которая стала лучше за эту неделю. Не тренер оценивает — он сам говорит. Тренер только кивает и подтверждает.</div></div>
+              <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Тренер добавляет одно наблюдение на следующую неделю</strong> — не ошибку, а направление. Например: «В среду попробуем чуть раньше выходить на мяч».</div></div>
+            </div>
+          <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ НЕДЕЛЯ 3 ══════════════════════ -->
+    <div class="week-block w3" id="w3">
+      <div class="week-header" onclick="toggleWeek('w3')">
+        <div class="week-num">03</div>
+        <div class="week-info">
+          <div class="week-phase">Качество</div>
+          <div class="week-goal" data-editable="" contenteditable="false" data-placeholder="Цель недели...">6–10 октября · Сложные ситуации · психологическая устойчивость · игровой режим</div>
+        </div>
+        <div class="week-badge">Психология</div>
+        <span class="week-header-arrow">›</span>
+      </div>
+      <div class="session-picker">
+        <button class="session-pick-btn" id="pick-w3-vt" onclick="gotoSession('w3-vt',this)">Вт 06.10</button>
+        <button class="session-pick-btn" id="pick-w3-chet" onclick="gotoSession('w3-chet',this)">Чт 08.10</button>
+        <button class="session-pick-btn" id="pick-w3-sb" onclick="gotoSession('w3-sb',this)">Сб 10.10</button>
+      </div>
+
+      <div class="sessions-grid">
+        <!-- В3 Вторник -->
+        <div class="session-card" id="w3-vt">
+          <div class="session-head">
+            <div><div class="session-day">Вторник</div><div class="session-type">Качество — технически сложные эпизоды</div><div class="session-date">6 октября 2026</div></div>
+            <div class="session-dur">40 мин</div>
+          </div>
+
+          <!-- ПУНКТ 0 -->
+          <div class="exercise open">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">до начала</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Бег и беговые с полевыми</span>
+              <span class="exercise-tag">Общая работа</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Вратари выполняют общую беговую разминку вместе с командой</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага...">Бег в общем объёме с полевыми игроками: лёгкий бег, ускорения, беговые упражнения (захлёст, высокое бедро, приставной). Темп и объём — по плану тренера команды.</div></div>
+              </div>
+              <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise open">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">0–7</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Разминка</span>
+              <span class="exercise-tag">Разминка</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Осознанная разминка — неделя на качество и детали исполнения</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>2 мин:</strong> суставная гимнастика от головы вниз.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>3 мин:</strong> приставные шаги + лёгкие прыжки в стойку × 10.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>2 мин:</strong> броски в парах с нарастающим темпом — начало спокойное, последняя минута быстрая.</div></div>
+              </div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">7–20</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Позиционирование при угловом — детальный разбор</span>
+              <span class="exercise-tag">Технически сложное</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Упор: точная стартовая позиция, маршрут выхода, момент прыжка — разобрать каждую фазу отдельно</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Фаза 1 — стартовая позиция (3 мин):</strong> при подаче углового вратарь встаёт у ближней штанги на расстоянии вытянутой руки. Тренер проверяет: угол к мячу, вес на носках, руки немного разведены. Отрабатываем только вставание в позицию, без мяча. × 6 раз каждая.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Фаза 2 — маршрут выхода (4 мин):</strong> тренер обозначает точку приземления мяча. Вратарь проходит маршрут пешком: старт → два шага вперёд и чуть правее → прыжок → поймать. После каждого прохода — тренер говорит «на шаг раньше» или «хорошо». Без спешки.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Фаза 3 — с подачей (6 мин):</strong> тренер навешивает с угла, вратарь применяет разобранный маршрут. Полная пауза после каждого мяча — вратарь называет: «вышла рано / поздно / вовремя». Только 4–5 мячей на каждую — качество, не количество.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">⚠️</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">На этой неделе нет объёма — каждый мяч разбираем. Тренер может остановить вратаря прямо в прыжке (объяснить руками) — это нормально и нужно.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">20–40</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Выход 1в1 — четыре фазы решения</span>
+              <span class="exercise-tag">Технически сложное</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Упор: осознанное принятие решения в каждой фазе — не «как получилось», а «почему так»</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Разбор четырёх фаз (5 мин, без мяча):</strong> тренер объясняет и показывает: (1) момент выхода — когда нападающий пересёк линию, (2) траектория — прямо к мячу, не к нападающему, (3) остановка — на расстоянии 2 м, не прыгать заранее, (4) момент броска — по стопе нападающего. Вратарь повторяет шаги пешком.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Практика с замедлением (10 мин):</strong> второй вратарь бежит с мячом в полскорости. Первая применяет все четыре фазы. После каждого эпизода — тренер и вратарь вместе называют какая из фаз была правильной, какая нет. × 5 эпизодов на каждую.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Практика в полную скорость (5 мин):</strong> те же фазы, но второй вратарь бежит в игровом темпе. После каждого — пауза 10 сек, вратарь сама называет фазу, которую удалось выполнить правильно. × 3 эпизода на каждую. Не больше — качество важнее.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">🧠</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">Главная цель этого упражнения — не поймать мяч, а объяснить своё решение. Вратарь которая понимает почему — будет делать правильно и в матче.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <!-- АНТИЦИПАЦИЯ -->
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">перед заминкой</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Антиципация — серия с разных позиций</span>
+              <span class="exercise-tag">Ситуативное</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Упор: мгновенная перестройка при смене угла атаки — без паузы между ударами</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Упражнение «Серия с разных позиций»:</strong> два нападающих (второй вратарь + тренер) стоят в разных точках — один на центре, второй на фланге. Бьют поочерёдно без паузы: первый ударил — вратарь отбила и сразу перестраивается под второго. Вратарь не знает кто бьёт следующим. × 2–3 серии по 8–10 ударов. Пауза между сериями 20 сек.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">🧠</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">Это упражнение тренирует не скорость — а переключение внимания. После каждого отбива — взгляд быстро на второй источник угрозы. Не думать, где первый мяч: он уже улетел.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <!-- СКР -->
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">заминка</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">СКР — самоконтроль и саморегуляция</span>
+              <span class="exercise-tag">Психология</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">15–20 секунд: проверяем состояние тела и возвращаемся в рабочий режим</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>После завершения работы:</strong> встать, остановиться на 15–20 секунд. Задать себе три вопроса: «Мышцы — зажаты или расслаблены?», «Дыхание — ровное или задержанное?», «Выражение лица — напряжённое или нейтральное?»</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Если есть напряжение:</strong> расслабить мышцы (встряхнуть руки и плечи), улыбнуться — это физически снимает мышечный тонус лица, затем 2–3 глубоких вдоха с удлинённым выдохом: вдох 3 сек → выдох 5 сек.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Ритмичное дыхание (если нужно):</strong> вдох → задержка 2 сек → выдох длиннее вдоха. Повторить 3–4 раза. Это сигнал нервной системе: «ситуация под контролем». Навык применять и в матче — особенно после пропущенного гола.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">🧠</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">СКР — это не расслабление, это управление. Вратарь которая умеет быстро вернуться в рабочее состояние — стабильнее на протяжении всей игры.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+        </div>
+
+        <!-- В3 Четверг -->
+        <div class="session-card" id="w3-chet">
+          <div class="session-head">
+            <div><div class="session-day">Четверг</div><div class="session-type">Качество — чтение игры и детали</div><div class="session-date">8 октября 2026</div></div>
+            <div class="session-dur">40 мин</div>
+          </div>
+
+          <!-- ПУНКТ 0 -->
+          <div class="exercise open">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">до начала</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Бег и беговые с полевыми</span>
+              <span class="exercise-tag">Общая работа</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Вратари выполняют общую беговую разминку вместе с командой</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага...">Бег в общем объёме с полевыми игроками: лёгкий бег, ускорения, беговые упражнения (захлёст, высокое бедро, приставной). Темп и объём — по плану тренера команды.</div></div>
+              </div>
+              <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise open">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">0–7</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Разминка</span>
+              <span class="exercise-tag">Разминка</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Осознанный разогрев — неделя на точность и детали</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>3 мин:</strong> суставная гимнастика + растяжка паха лёжа по 30 сек.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>4 мин:</strong> быстрые броски в парах с нарастающим темпом — последнюю минуту максимально быстро.</div></div>
+              </div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">7–22</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Стойка и позиция — разбор по фазам</span>
+              <span class="exercise-tag">Технически сложное</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Упор: точная стойка в каждой позиции ворот — угол, центр, выход на фланг</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Фаза 1 — центральная позиция (5 мин):</strong> тренер ставит вратаря в центр ворот и поправляет: положение стоп (на ширине плеч, носки чуть наружу), угол тела (чуть вперёд), положение рук (на уровне поясницы, готовы к движению). Тренер бьёт медленно в разные зоны — вратарь после каждого мяча возвращается точно в исходную позицию.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Фаза 2 — угловая позиция (5 мин):</strong> мяч на фланге у тренера. Вратарь занимает позицию относительно линии ворот и угла атаки. Тренер показывает на правильный вес (носки, не пятки) и точку взгляда (на мяч, краем — на штангу). Разбираем каждую корректировку вслух.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Фаза 3 — перестановка (5 мин):</strong> тренер перекатывает мяч из центра на фланг и обратно. Вратарь перемещается и каждый раз занимает правильную позицию. Акцент: приставной шаг, не скрестный — контроль тела. × 4 смены позиции на каждую. После каждой смены — пауза, тренер проверяет.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">⚠️</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">Качественная стойка — это не один раз показать, это привычка тела. На этой неделе замедляем и закрепляем каждую деталь.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">22–40</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Чтение атаки по замаху — трёхступенчатый анализ</span>
+              <span class="exercise-tag">Технически сложное</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Упор: читать направление до удара — по опорной ноге, корпусу и замаху</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Разбор без мяча (5 мин):</strong> тренер объясняет три сигнала — (1) опорная нога: куда носок, туда мяч, (2) корпус: разворот тела подсказывает зону, (3) замах: открытая стопа — удар навесом или в дальний угол. Вратарь повторяет устно.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Упражнение «Стоп-кадр» (8 мин):</strong> второй вратарь делает замах — первая вратарь кричит куда полетит мяч ДО удара: «низ право», «верх центр» и т.д. После — мяч бьётся. Оцениваем точность прогноза, не защиты. × 6 ударов каждой.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Применение в игре (5 мин):</strong> те же удары, но теперь вратарь реагирует — читает и тянется в нужную сторону. Акцент: начало движения ДО удара, не после. Тренер может специально обмануть — вратарь должна держать позицию до последнего. × 4 удара каждой.</div></div>
+              </div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <!-- СКР -->
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">заминка</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">СКР — самоконтроль и саморегуляция</span>
+              <span class="exercise-tag">Психология</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">15–20 секунд: проверяем состояние тела и возвращаемся в рабочий режим</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>После завершения работы:</strong> встать, остановиться на 15–20 секунд. Задать себе три вопроса: «Мышцы — зажаты или расслаблены?», «Дыхание — ровное или задержанное?», «Выражение лица — напряжённое или нейтральное?»</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Если есть напряжение:</strong> расслабить мышцы (встряхнуть руки и плечи), улыбнуться — это физически снимает мышечный тонус лица, затем 2–3 глубоких вдоха с удлинённым выдохом: вдох 3 сек → выдох 5 сек.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Ритмичное дыхание (если нужно):</strong> вдох → задержка 2 сек → выдох длиннее вдоха. Повторить 3–4 раза. Это сигнал нервной системе: «ситуация под контролем». Навык применять и в матче — особенно после пропущенного гола.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">🧠</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">СКР — это не расслабление, это управление. Вратарь которая умеет быстро вернуться в рабочее состояние — стабильнее на протяжении всей игры.</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="session-card" id="w3-sb" style="margin-top:16px">
+        <div class="session-head">
+          <div><div class="session-day">Суббота</div><div class="session-type">Восстановление — психология и образы</div><div class="session-date">10 октября 2026</div></div>
+          <div class="session-dur">30 мин</div>
+        </div>
+
+        <div class="exercise open">
+          <div class="exercise-head" onclick="toggle(this)">
+            <span class="exercise-time">0–10</span>
+            <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Растяжка + дыхание</span>
+            <span class="exercise-tag">Восстановление</span>
+            <span class="exercise-chevron">▾</span>
+          </div>
+          <div class="exercise-body">
+            <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Неделя была жёсткой психологически — восстанавливаем не только тело</div>
+            <div class="steps">
+              <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>5 мин растяжка:</strong> стандартный комплекс — пах, квадрицепс, задняя поверхность бедра, плечи. Лёжа и стоя, всё медленно. Музыка в фоне если есть.</div></div>
+              <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>5 мин — дыхательное упражнение:</strong> лечь на спину, закрыть глаза. Вдох на 4 счёта → задержка 2 счёта → выдох на 6 счётов. Повторить 8 раз. Тренер считает вслух или в тишине — как удобнее. Это не медитация — просто пауза и восстановление нервной системы.</div></div>
+            </div>
+          <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+        </div>
+
+        <div class="exercise open">
+          <div class="exercise-head" onclick="toggle(this)">
+            <span class="exercise-time">10–22</span>
+            <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Видеоразбор или разговор об эпизодах</span>
+            <span class="exercise-tag">Корректировка</span>
+            <span class="exercise-chevron">▾</span>
+          </div>
+          <div class="exercise-body">
+            <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Учиться на образах — не на ошибках</div>
+            <div class="steps">
+              <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Если есть видео с тренировок:</strong> выбрать 2–3 момента, где вратарь сделала что-то правильно. Посмотреть вместе. Тренер говорит: «Смотри, вот здесь — вот это момент.» Никаких «но». Только хорошее.</div></div>
+              <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Если видео нет:</strong> тренер описывает словами 2 конкретных эпизода, которые запомнились с положительной стороны. Вратарка слушает и вспоминает ощущение. «Помнишь, во вторник тот эпизод? Ты сделала вот это — это правильно».</div></div>
+              <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Одно целевое наблюдение на финальную неделю:</strong> тренер называет одну вещь, которую стоит сделать лучше. Одну — не список.</div></div>
+            </div>
+            <div class="tip"><span class="tip-icon">🧠</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">Мозг запоминает образы. Если вратарь уходит в выходные с картиной успеха — он выходит на следующую тренировку с уверенностью, не с тревогой.</span></div>
+          <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+        </div>
+
+        <div class="exercise open">
+          <div class="exercise-head" onclick="toggle(this)">
+            <span class="exercise-time">22–30</span>
+            <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Лёгкие броски — просто в удовольствие</span>
+            <span class="exercise-tag">Мяч</span>
+            <span class="exercise-chevron">▾</span>
+          </div>
+          <div class="exercise-body">
+            <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Заканчиваем с мячом в руках — никаких задач, просто касание</div>
+            <div class="steps">
+              <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>8 мин:</strong> свободные броски с 6–8 м друг другу. Темп — как хочется. Можно разговаривать, можно в тишине. Мяч в руках — тело помнит, что умеет.</div></div>
+            </div>
+          <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ НЕДЕЛЯ 4 ══════════════════════ -->
+    <div class="week-block w4 week-open" id="w4">
+      <div class="week-header" onclick="toggleWeek('w4')">
+        <div class="week-num">04</div>
+        <div class="week-info">
+          <div class="week-phase">Пик</div>
+          <div class="week-goal" data-editable="" contenteditable="false" data-placeholder="Цель недели...">13–17 октября · Снижаем объём · поднимаем уверенность · выходим на максимум к турниру</div>
+        </div>
+        <div class="week-badge">Турнир</div>
+        <span class="week-header-arrow">›</span>
+      </div>
+      <div class="session-picker">
+        <button class="session-pick-btn" id="pick-w4-vt" onclick="gotoSession('w4-vt',this)">Вт 13.10</button>
+        <button class="session-pick-btn active" id="pick-w4-chet" onclick="gotoSession('w4-chet',this)">Чт 15.10</button>
+        <button class="session-pick-btn" id="pick-w4-sb" onclick="gotoSession('w4-sb',this)">Сб 17.10</button>
+      </div>
+
+      <div class="sessions-grid">
+        <!-- В4 Вторник -->
+        <div class="session-card" id="w4-vt">
+          <div class="session-head">
+            <div><div class="session-day">Вторник</div><div class="session-type">Шлифовка</div><div class="session-date">13 октября 2026</div></div>
+            <div class="session-dur">40 мин</div>
+          </div>
+
+          <div class="exercise open">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">0–6</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Разминка</span>
+              <span class="exercise-tag">Разминка</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Спокойная, полная — финальная неделя без торопливости</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>3 мин:</strong> суставная гимнастика + растяжка паха и плеч.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>3 мин:</strong> броски в парах — спокойный темп, хорошая ловля, нет спешки.</div></div>
+              </div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">6–21</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Ловля + броски в углы</span>
+              <span class="exercise-tag">Шлифовка</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Повторяем лучшее из первых двух недель — на уверенность</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>7 мин — ловля в движении:</strong> 2 приставных шага → мяч в противоположную сторону. × 10 на каждую. Средний темп.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>8 мин — броски в углы:</strong> нижние и верхние поочерёдно, с 10 м. × 8+6 на каждую. После каждого мяча — встать, стойка. Без спешки, но без пауз.</div></div>
+              </div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">21–40</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Игра ногами + выходы 1в1</span>
+              <span class="exercise-tag">Шлифовка</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Закрепляем то, что уже хорошо работает</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>9 мин — игра ногами:</strong> передачи одно касание с 15 м + выбивание с рук. Любимые дистанции, уверенный темп. × 10 пар + × 6 ударов на каждую.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>10 мин — выходы 1в1:</strong> спокойнее, чем на 3-й неделе. Акцент не на давление, а на уверенность позиции. × 6 эпизодов на каждую.</div></div>
+              </div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+        </div>
+
+        <!-- В4 Четверг -->
+        <div class="session-card session-active" id="w4-chet">
+          <div class="session-head">
+            <div><div class="session-day">Четверг</div><div class="session-type">Имитация матча</div><div class="session-date">15 октября 2026</div></div>
+            <div class="session-dur">40 мин</div>
+          </div>
+
+          <div class="exercise open">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">0–6</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Разминка</span>
+              <span class="exercise-tag">Разминка</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Боевая разминка — настрой как перед матчем</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>2 мин:</strong> суставная гимнастика быстро.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>2 мин:</strong> приставные с ускорением + прыжки в стойку</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>2 мин:</strong> быстрые броски в парах — последние 30 сек на максимуме.</div></div>
+              </div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+
+          <div class="exercise">
+            <div class="exercise-head" onclick="toggle(this)">
+              <span class="exercise-time">6–40</span>
+              <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Имитация матча — игровой режим</span>
+              <span class="exercise-tag">Основное</span>
+              <span class="exercise-chevron">▾</span>
+            </div>
+            <div class="exercise-body">
+              <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Вся тренировка — как в матче. Тренер не останавливает и не подсказывает.</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>15 мин:</strong> первый вратарь в воротах. Тренер атакует откуда хочет — бьёт, навешивает, катит, добивает. Без пауз.</div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>3 мин — пауза:</strong> вратарь называет вслух 2 вещи, которые получились хорошо. Не тренер — он сам.</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>10 мин:</strong> второй вратарь. Та же схема.</div></div>
+                <div class="step"><div class="step-n">4</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>6 мин — финал вместе:</strong> обе поочерёдно отражают серии по 3 удара. Без длинных пауз. Заканчиваем на хорошем сейве — тренер специально даёт удар, который вратарь поймает красиво.</div></div>
+              </div>
+              <div class="tip"><span class="tip-icon">🎯</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">Завершить тренировку на позитиве — последнее ощущение перед турниром должно быть «я это могу».</span></div>
+            <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="session-card" id="w4-sb" style="margin-top:16px">
+        <div class="session-head">
+          <div><div class="session-day">Суббота</div><div class="session-type">Перед турниром — лёгкая активация</div><div class="session-date">17 октября 2026</div></div>
+          <div class="session-dur">20 мин</div>
+        </div>
+
+        <div class="exercise open">
+          <div class="exercise-head" onclick="toggle(this)">
+            <span class="exercise-time">0–7</span>
+            <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Растяжка — мягко и полностью</span>
+            <span class="exercise-tag">Восстановление</span>
+            <span class="exercise-chevron">▾</span>
+          </div>
+          <div class="exercise-body">
+            <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Тело должно быть свежим, не накаченным — никакой нагрузки</div>
+            <div class="steps">
+              <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Комплекс сверху вниз (7 мин):</strong> шея → плечи → спина → пах → бёдра → голеностоп. По 30–40 сек каждой зоны. Всё стоя или лёжа — как комфортнее. Никаких силовых удержаний.</div></div>
+            </div>
+            <div class="tip"><span class="tip-icon">⚡</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">Главное правило предтурнирного дня: если что-то болит — не трогать. Организм сам знает что делать.</span></div>
+          <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+        </div>
+
+        <div class="exercise open">
+          <div class="exercise-head" onclick="toggle(this)">
+            <span class="exercise-time">7–17</span>
+            <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Лёгкая активация с мячом</span>
+            <span class="exercise-tag">Мяч</span>
+            <span class="exercise-chevron">▾</span>
+          </div>
+          <div class="exercise-body">
+            <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Разбудить руки и ноги — без напряжения</div>
+            <div class="steps">
+              <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>5 мин — броски в парах с 6 м:</strong> верхом, низом, сбоку. Никакого темпа. Мяч должен ощущаться привычным и удобным, не спортивным снарядом.</div></div>
+              <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>5 мин — пару выходов:</strong> тренер тихо подаёт мяч в угол — вратарь идёт (не прыгает, не летит) и берёт. × 4–5 раз на каждую. Просто чтоб тело помнило движение.</div></div>
+            </div>
+          <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+        </div>
+
+        <div class="exercise open">
+          <div class="exercise-head" onclick="toggle(this)">
+            <span class="exercise-time">17–20</span>
+            <span class="exercise-name" data-editable="" contenteditable="false" data-placeholder="Название упражнения...">Разговор — сильные стороны перед турниром</span>
+            <span class="exercise-tag">Настрой</span>
+            <span class="exercise-chevron">▾</span>
+          </div>
+          <div class="exercise-body">
+            <div class="focus-bar" data-editable="" contenteditable="false" data-placeholder="Фокус упражнения...">Уходим на турнир с уверенностью, не с тревогой</div>
+            <div class="steps">
+              <div class="step"><div class="step-n">1</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Каждый вратарь называет вслух:</strong> одну свою сильную сторону, которая появилась или выросла за этот месяц. Именно своими словами. Тренер не перебивает.</div></div>
+              <div class="step"><div class="step-n">2</div><div class="step-text" data-editable="" contenteditable="false" data-placeholder="Текст шага..."><strong>Тренер заканчивает одной фразой</strong> — не про задачи, а про уверенность. Например: «Месяц назад вы не знали паркета. Сейчас знаете. Завтра будет ещё лучше».</div></div>
+            </div>
+            <div class="tip"><span class="tip-icon">🎯</span><span data-editable="" contenteditable="false" data-placeholder="Подсказка...">Последнее, что вратарь слышит перед турниром, он несёт в ворота. Пусть это будет что-то сильное.</span></div>
+          <div class="notes-section">
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ ПСИХОЛОГИЯ ══════════════════════ -->
+    <div class="week-block" id="psych">
+      <div class="week-header">
+        <div class="week-num" style="color:var(--accent)">🧠</div>
+        <div class="week-info">
+          <div class="week-phase" style="color:var(--accent)">Психология</div>
+          <div class="week-goal" data-editable="" contenteditable="false" data-placeholder="Цель недели...">Три правила на весь месяц — не упражнения, а привычки</div>
+        </div>
+      </div>
+      <div class="psych-block">
+        <div class="psych-title">Правила на весь месяц</div>
+        <div class="psych-rules">
+          <div class="psych-rule"><div class="psych-num">1</div><div>После каждого пропущенного мяча — вратарь говорит вслух одно слово: <strong>«дальше»</strong>. Не анализирует, не расстраивается. Просто «дальше» — и готовится к следующему мячу. Привычка формируется к 3-й неделе.</div></div>
+          <div class="psych-rule"><div class="psych-num">2</div><div>В конце каждой тренировки — каждый вратарь называет <strong>одну вещь, которая получилась хорошо</strong>. Не тренер, а он сам. Это строит внутреннюю точку опоры.</div></div>
+          <div class="psych-rule"><div class="psych-num">3</div><div>На 4-й неделе тренер перестаёт комментировать ошибки <strong>во время упражнений</strong>. Только после. Это учит вратаря самостоятельно держать фокус — именно так нужно работать в матче.</div></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+function toggle(head) {
+  const ex = head.closest('.exercise');
+  ex.classList.toggle('open');
+}
+function goto(id) {
+  const el = document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ── Session filter ────────────────────────────────────────────
+function clearSessionFilter() {
+  document.querySelectorAll('.session-card').forEach(c => c.classList.remove('session-active'));
+  document.querySelectorAll('.nav-sub').forEach(b => b.classList.remove('nav-sub-active'));
+  document.querySelectorAll('.session-pick-btn').forEach(b => b.classList.remove('active'));
+}
+
+function gotoSession(id, btn) {
+  const card = document.getElementById(id);
+  if (!card) return;
+
+  // If already active — toggle off
+  if (card.classList.contains('session-active')) {
+    clearSessionFilter();
+    const week = card.closest('.week-block');
+    if (week) week.scrollIntoView({behavior:'smooth', block:'start'});
+    return;
+  }
+
+  clearSessionFilter();
+  card.classList.add('session-active');
+
+  // Highlight nav-sub
+  const navBtn = document.getElementById('nav-' + id);
+  if (navBtn) navBtn.classList.add('nav-sub-active');
+
+  // Highlight pick-btn (may be the btn itself or its sibling)
+  const pickBtn = document.getElementById('pick-' + id);
+  if (pickBtn) pickBtn.classList.add('active');
+  // Also mark btn if it's the pick-btn directly
+  if (btn && btn !== navBtn && btn !== pickBtn) btn.classList.add('active');
+
+  // Make sure the week is open
+  const week = card.closest('.week-block');
+  if (week) week.classList.add('week-open');
+
+  card.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function toggleWeek(id) {
+  const block = document.getElementById(id);
+  if (!block) return;
+  const isOpen = block.classList.toggle('week-open');
+  if (!isOpen) {
+    // closing — hide any active session in this week
+    block.querySelectorAll('.session-card').forEach(c => {
+      if (c.classList.contains('session-active')) {
+        clearSessionFilter();
+      }
+    });
+  }
+  block.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function gotoWeek(id) {
+  clearSessionFilter();
+  const el = document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ── Firebase config ───────────────────────────────────────────
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDJ5ahjF92r3AaA20JrbuAn_j1bKmIP9Bw",
+  authDomain: "goalkeepers-plan.firebaseapp.com",
+  projectId: "goalkeepers-plan",
+  storageBucket: "goalkeepers-plan.firebasestorage.app",
+  messagingSenderId: "658354772490",
+  appId: "1:658354772490:web:21dcf805fb4724d1c81df3",
+  measurementId: "G-BQM8SFBRJ0"
+};
+const ADMIN_PASSWORD = "0035";
+
+// ── Core state ─────────────────────────────────────────────────
+let db = null;
+let canWrite = false;
+let editMode = false;
+
+// ── Init ──────────────────────────────────────────────────────
+async function init() {
+  setupEditableFields();
+  setupStepButtons();
+  setupNoteSections();
+  assignIds();
+
+  // Init Firebase
+  try {
+    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const { getFirestore, doc, getDoc, setDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const app = initializeApp(FIREBASE_CONFIG);
+    db = getFirestore(app);
+    window._fsDoc = doc;
+    window._fsGetDoc = getDoc;
+    window._fsSetDoc = setDoc;
+
+    // Load saved content from Firestore
+    await loadFromFirestore();
+  } catch(e) {
+    console.warn('Firebase init error:', e);
+  }
+
+  // Check if admin (stored in sessionStorage)
+  if (sessionStorage.getItem('gk_admin') === 'yes') {
+    grantAdmin();
+  }
+}
+
+function grantAdmin() {
+  canWrite = true;
+  document.body.classList.add('can-edit');
+  document.getElementById('edit-toggle-btn').style.display = '';
+  const login = document.getElementById('admin-login');
+  if (login) login.style.display = 'none';
+}
+
+async function loadFromFirestore() {
+  try {
+    const ref = window._fsDoc(db, 'page', 'content');
+    const snap = await window._fsGetDoc(ref);
+    if (snap.exists()) {
+      const data = snap.data();
+      // Restore editable fields
+      if (data.fields) {
+        Object.entries(data.fields).forEach(([id, val]) => {
+          const el = document.querySelector(`[data-field-id="${id}"]`);
+          if (el) el.innerHTML = val;
+        });
+      }
+      // Restore steps
+      if (data.steps) {
+        Object.entries(data.steps).forEach(([containerId, stepsHtml]) => {
+          const el = document.querySelector(`[data-steps-id="${containerId}"]`);
+          if (el) {
+            el.innerHTML = stepsHtml;
+            setupStepButtonsIn(el);
+          }
+        });
+        // Re-setup editable fields inside restored steps
+        setupEditableFields();
+      }
+      // Restore notes
+      if (data.notes) {
+        Object.entries(data.notes).forEach(([containerId, notesHtml]) => {
+          const el = document.querySelector(`[data-notes-id="${containerId}"]`);
+          if (el) el.innerHTML = notesHtml;
+        });
+      }
+    }
+  } catch(e) {
+    console.warn('Load error:', e);
+  }
+}
+
+// ── Step controls ─────────────────────────────────────────────
+function renumberSteps(stepsEl) {
+  stepsEl.querySelectorAll('.step').forEach((s, i) => {
+    const n = s.querySelector('.step-n');
+    if (n) n.textContent = i + 1;
+  });
+}
+function setupStepButtonsIn(container) {
+  container.querySelectorAll('.step').forEach(step => {
+    if (step.querySelector('.step-actions')) return;
+    const actions = document.createElement('div');
+    actions.className = 'step-actions';
+    actions.innerHTML = `
+      <button class="step-btn step-btn-del" title="Удалить шаг" onclick="deleteStep(this)">−</button>
+      <button class="step-btn step-btn-add" title="Добавить шаг после" onclick="addStep(this)">+</button>
+    `;
+    step.appendChild(actions);
+  });
+}
+function setupStepButtons() {
+  document.querySelectorAll('.steps').forEach(el => setupStepButtonsIn(el));
+}
+function deleteStep(btn) {
+  const step = btn.closest('.step');
+  const stepsEl = step.closest('.steps');
+  if (stepsEl.querySelectorAll('.step').length <= 1) return;
+  step.remove();
+  renumberSteps(stepsEl);
+  markDirty();
+}
+function addStep(btn) {
+  const step = btn.closest('.step');
+  const stepsEl = step.closest('.steps');
+  const newStep = document.createElement('div');
+  newStep.className = 'step';
+  newStep.innerHTML = `
+    <div class="step-n">?</div>
+    <div class="step-text" data-editable="" contenteditable="${editMode ? 'true' : 'false'}" data-placeholder="Текст шага..."></div>
+    <div class="step-actions">
+      <button class="step-btn step-btn-del" title="Удалить шаг" onclick="deleteStep(this)">−</button>
+      <button class="step-btn step-btn-add" title="Добавить шаг после" onclick="addStep(this)">+</button>
+    </div>
+  `;
+  const textEl = newStep.querySelector('.step-text');
+  textEl.addEventListener('input', markDirty);
+  step.after(newStep);
+  renumberSteps(stepsEl);
+  textEl.focus();
+  markDirty();
+}
+let editSnapshot = null; // snapshot taken when entering edit mode
+
+function markDirty() {
+  const saveBtn = document.getElementById('save-all-btn');
+  if (saveBtn) saveBtn.disabled = false;
+  hideCancelConfirm();
+}
+
+function showCancelConfirm() {
+  document.getElementById('cancel-confirm').classList.add('show');
+}
+function hideCancelConfirm() {
+  const el = document.getElementById('cancel-confirm');
+  if (el) el.classList.remove('show');
+}
+function cancelConfirmYes() {
+  hideCancelConfirm();
+  restoreSnapshot();
+  const saveBtn = document.getElementById('save-all-btn');
+  if (saveBtn) saveBtn.disabled = true;
+  editMode = true; // trick: set true so toggleEditMode will flip it to false
+  toggleEditMode(true);
+}
+function cancelConfirmNo() {
+  hideCancelConfirm();
+}
+
+function takeSnapshot() {
+  editSnapshot = {};
+  document.querySelectorAll('.steps').forEach((stepsEl, i) => {
+    editSnapshot[i] = stepsEl.innerHTML;
+  });
+}
+
+function restoreSnapshot() {
+  if (!editSnapshot) return;
+  const allSteps = document.querySelectorAll('.steps');
+  allSteps.forEach((stepsEl, i) => {
+    if (editSnapshot[i] !== undefined) {
+      stepsEl.innerHTML = editSnapshot[i];
+    }
+  });
+  editSnapshot = null;
+  // Re-bind input listeners on restored editable fields
+  document.querySelectorAll('[data-editable]').forEach(el => {
+    el.setAttribute('contenteditable', 'false');
+  });
+}
+
+// ── Assign stable IDs for Firestore ──────────────────────────
+function assignIds() {
+  // Editable fields
+  let fi = 0;
+  document.querySelectorAll('.step-text, .focus-bar, .tip span:last-child, .exercise-name, .week-goal').forEach(el => {
+    if (!el.dataset.fieldId) el.dataset.fieldId = 'f' + (fi++);
+  });
+  // Steps containers
+  let si = 0;
+  document.querySelectorAll('.steps').forEach(el => {
+    if (!el.dataset.stepsId) el.dataset.stepsId = 's' + (si++);
+  });
+  // Notes containers
+  let ni = 0;
+  document.querySelectorAll('.notes-section').forEach(el => {
+    if (!el.dataset.notesId) el.dataset.notesId = 'n' + (ni++);
+  });
+}
+
+// ── Make fields editable ──────────────────────────────────────
+function setupEditableFields() {
+  // Step texts — the text node after <strong>
+  document.querySelectorAll('.step-text').forEach(el => {
+    el.setAttribute('data-editable', '');
+    el.setAttribute('contenteditable', 'false');
+    el.setAttribute('data-placeholder', 'Текст шага...');
+  });
+  // Focus bars
+  document.querySelectorAll('.focus-bar').forEach(el => {
+    el.setAttribute('data-editable', '');
+    el.setAttribute('contenteditable', 'false');
+    el.setAttribute('data-placeholder', 'Фокус упражнения...');
+  });
+  // Tip texts
+  document.querySelectorAll('.tip span:last-child').forEach(el => {
+    el.setAttribute('data-editable', '');
+    el.setAttribute('contenteditable', 'false');
+    el.setAttribute('data-placeholder', 'Подсказка...');
+  });
+  // Exercise names
+  document.querySelectorAll('.exercise-name').forEach(el => {
+    el.setAttribute('data-editable', '');
+    el.setAttribute('contenteditable', 'false');
+    el.setAttribute('data-placeholder', 'Название упражнения...');
+  });
+  // Week goals
+  document.querySelectorAll('.week-goal').forEach(el => {
+    el.setAttribute('data-editable', '');
+    el.setAttribute('contenteditable', 'false');
+    el.setAttribute('data-placeholder', 'Цель недели...');
+  });
+
+  // Prevent toggle collapse when clicking editable in edit mode or week-goal
+  document.querySelectorAll('[data-editable]').forEach(el => {
+    el.addEventListener('click', e => {
+      if (editMode || el.classList.contains('week-goal')) e.stopPropagation();
+    });
+    // Prevent Enter adding <div> — use Shift+Enter for line break
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        document.execCommand('insertLineBreak');
+      }
+    });
+    el.addEventListener('input', markDirty);
+  });
+}
+
+// ── Toggle edit mode ──────────────────────────────────────────
+function toggleEditMode(forceOff) {
+  const saveBtn = document.getElementById('save-all-btn');
+  const isDirty = saveBtn && !saveBtn.disabled;
+
+  if (!editMode) {
+    // Entering edit mode — take snapshot
+    takeSnapshot();
+    editMode = true;
+  } else {
+    // Exiting edit mode
+    if (!forceOff && isDirty) {
+      // Has unsaved changes — show inline confirm banner instead of confirm()
+      showCancelConfirm();
+      return; // stay in edit mode until user confirms
+    }
+    // Restore snapshot (cancel changes)
+    if (!forceOff) {
+      restoreSnapshot();
+      if (saveBtn) { saveBtn.disabled = true; }
+    }
+    editMode = false;
+  }
+
+  document.body.classList.toggle('edit-mode', editMode);
+
+  const btn = document.getElementById('edit-toggle-btn');
+  const banner = document.getElementById('edit-banner');
+
+  if (editMode) {
+    btn.textContent = '✕ Выйти';
+    btn.classList.add('active');
+    banner.classList.add('show');
+    document.querySelectorAll('[data-editable]').forEach(el => {
+      el.setAttribute('contenteditable', 'true');
+    });
+  } else {
+    btn.textContent = '✏️ Редактировать';
+    btn.classList.remove('active');
+    banner.classList.remove('show');
+    document.querySelectorAll('[data-editable]').forEach(el => {
+      el.setAttribute('contenteditable', 'false');
+    });
+  }
+}
+
+// ── Save all ──────────────────────────────────────────────────
+async function saveAll() {
+  const btn = document.getElementById('save-all-btn');
+  btn.disabled = true;
+  btn.textContent = '💾 Сохраняю...';
+  // Turn off edit mode before publishing so the page is saved in view state
+  // forceOff=true → skip confirm dialog, keep changes (we're saving them)
+  toggleEditMode(true);
+  editSnapshot = null; // discard snapshot — changes are now saved
+  await publishPage();
+  btn.disabled = true;
+  btn.textContent = '💾 Сохранить';
+}
+
+// ── Notes section ──────────────────────────────────────────────
+function setupNoteSections() {
+  document.querySelectorAll('.exercise-body').forEach(body => {
+    if (body.querySelector('.notes-section')) return;
+    const sec = document.createElement('div');
+    sec.className = 'notes-section';
+    sec.innerHTML = `
+      <button class="add-note-btn" onclick="openNoteForm(this)">
+        <span>📌</span> Добавить пометку
+      </button>
+      <div class="note-form">
+        <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+        <div class="note-actions">
+          <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+          <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+        </div>
+      </div>`;
+    body.appendChild(sec);
+  });
+}
+
+function openNoteForm(btn) {
+  const form = btn.nextElementSibling;
+  form.classList.add('open');
+  form.querySelector('textarea').focus();
+  btn.style.display = 'none';
+}
+
+function closeNoteForm(cancelBtn) {
+  const form = cancelBtn.closest('.note-form');
+  form.classList.remove('open');
+  form.querySelector('textarea').value = '';
+  form.previousElementSibling.style.display = '';
+}
+
+async function saveNote(saveBtn) {
+  const form = saveBtn.closest('.note-form');
+  const ta = form.querySelector('textarea');
+  const text = ta.value.trim();
+  if (!text) return;
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Сохраняю...';
+
+  const sec = form.closest('.notes-section');
+  const note = document.createElement('div');
+  note.className = 'note';
+  note.innerHTML = `<span class="note-icon">📌</span><span class="note-text">${escHtml(text)}</span><button class="note-del" onclick="deleteNote(this)" title="Удалить">×</button>`;
+  sec.insertBefore(note, form.previousElementSibling);
+  closeNoteForm(form.querySelector('.note-cancel'));
+
+  await publishPage();
+  saveBtn.disabled = false;
+  saveBtn.textContent = 'Сохранить';
+}
+
+async function deleteNote(delBtn) {
+  if (!canWrite) return;
+  delBtn.closest('.note').remove();
+  assignIds();
+  await publishPage();
+}
+
+// ── Admin login ───────────────────────────────────────────────
+function promptAdmin() {
+  const pwd = document.getElementById('admin-pwd-input');
+  if (!pwd) return;
+  if (pwd.value === ADMIN_PASSWORD) {
+    sessionStorage.setItem('gk_admin', 'yes');
+    grantAdmin();
+    document.getElementById('admin-login').style.display = 'none';
+    showStatus('✅ Вы вошли как администратор', true);
+  } else {
+    showStatus('❌ Неверный пароль', false);
+  }
+}
+
+// ── Save to Firestore ─────────────────────────────────────────
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showStatus(msg, ok) {
+  const el = document.getElementById('save-status');
+  el.textContent = msg;
+  el.className = 'save-status show ' + (ok ? 'ok' : 'err');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+async function publishPage() {
+  if (!db) { showStatus('⚠️ Нет подключения к БД', false); return; }
+  try {
+    const data = { fields: {}, steps: {}, notes: {} };
+
+    // Collect editable fields
+    document.querySelectorAll('[data-field-id]').forEach(el => {
+      data.fields[el.dataset.fieldId] = el.innerHTML;
+    });
+    // Collect steps containers
+    document.querySelectorAll('[data-steps-id]').forEach(el => {
+      // Save steps HTML without action buttons (they are added by JS)
+      const clone = el.cloneNode(true);
+      clone.querySelectorAll('.step-actions').forEach(a => a.remove());
+      data.steps[el.dataset.stepsId] = clone.innerHTML;
+    });
+    // Collect notes
+    document.querySelectorAll('[data-notes-id]').forEach(el => {
+      data.notes[el.dataset.notesId] = el.innerHTML;
+    });
+
+    const ref = window._fsDoc(db, 'page', 'content');
+    await window._fsSetDoc(ref, data);
+    showStatus('✅ Сохранено', true);
+  } catch(e) {
+    showStatus('❌ Ошибка сохранения', false);
+    console.error(e);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+<div class="edit-fab">
+  <div class="cancel-confirm" id="cancel-confirm">
+    <span class="cancel-confirm-text">Отменить все изменения?</span>
+    <button class="cancel-confirm-no" onclick="cancelConfirmNo()">Нет</button>
+    <button class="cancel-confirm-yes" onclick="cancelConfirmYes()">Да, отменить</button>
+  </div>
+  <div class="admin-login" id="admin-login">
+    <input type="password" id="admin-pwd-input" placeholder="Пароль админа"
+      onkeydown="if(event.key==='Enter')promptAdmin()">
+    <button class="admin-login-btn" onclick="promptAdmin()">Войти</button>
+  </div>
+  <div class="fab-buttons">
+    <button class="save-all-btn" id="save-all-btn" onclick="saveAll()" disabled="">💾 Сохранить</button>
+    <button class="edit-toggle-btn" id="edit-toggle-btn" onclick="toggleEditMode()" style="display:none">✏️ Редактировать</button>
+  </div>
+</div>
+
+
+
+</body>
+</html>
