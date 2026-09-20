@@ -386,6 +386,23 @@ body.edit-mode .step-actions{display:flex}
 .step-btn:hover{transform:scale(1.15)}
 .step-btn-del{background:#ef4444;color:#fff;}
 .step-btn-add{background:#22c55e;color:#fff;}
+/* Exercise-level controls */
+.exercise-actions{display:none;gap:6px;margin-left:auto;flex-shrink:0}
+body.edit-mode .exercise-actions{display:flex}
+.ex-btn{border:none;border-radius:6px;width:26px;height:26px;font-size:15px;
+  line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ex-btn-del{background:#ef4444;color:#fff;}
+.ex-btn-add{background:#22c55e;color:#fff;}
+/* Add-exercise button between exercises */
+.add-exercise-row{display:none;padding:4px 16px}
+body.edit-mode .add-exercise-row{display:block}
+.add-exercise-btn{background:transparent;border:1px dashed var(--border);color:var(--text-sec);
+  border-radius:8px;padding:4px 12px;cursor:pointer;font-size:12px;font-family:inherit;width:100%}
+.add-exercise-btn:hover{border-color:var(--accent);color:var(--accent)}
+/* session-type editable */
+body.edit-mode .session-type[data-editable]{
+  outline:1px dashed var(--accent-dim);border-radius:4px;padding:0 4px;
+}
 
 .reps-row{
   display:flex;
@@ -2569,6 +2586,28 @@ async function loadFromFirestore() {
           if (el) el.innerHTML = notesHtml;
         });
       }
+      // Restore exercise structure per session card
+      if (data.exercises) {
+        Object.entries(data.exercises).forEach(([cardId, exHtml]) => {
+          const card = document.getElementById(cardId);
+          if (!card) return;
+          // Remove existing exercises from this card
+          card.querySelectorAll('.exercise, .add-exercise-row').forEach(el => el.remove());
+          // Insert restored exercises before the notes-section or at end of card
+          const ref = card.querySelector('.session-notes') || null;
+          const tmp = document.createElement('div');
+          tmp.innerHTML = exHtml;
+          while (tmp.firstChild) {
+            if (ref) card.insertBefore(tmp.firstChild, ref);
+            else card.appendChild(tmp.firstChild);
+          }
+        });
+        // Re-setup everything
+        setupNoteSections();
+        setupStepButtons();
+        setupEditableFields();
+        assignIds();
+      }
     }
   } catch(e) {
     console.warn('Load error:', e);
@@ -2625,6 +2664,82 @@ function addStep(btn) {
   textEl.focus();
   markDirty();
 }
+// ── Exercise add/delete ──────────────────────────────────────
+function deleteExercise(btn) {
+  const ex = btn.closest('.exercise');
+  const card = ex.closest('.session-card');
+  // Don't delete if it's the only exercise in the session
+  if (card.querySelectorAll('.exercise').length <= 1) return;
+  // Remove the "add exercise" row that follows this exercise (if any)
+  const nextRow = ex.nextElementSibling;
+  if (nextRow && nextRow.classList.contains('add-exercise-row')) nextRow.remove();
+  ex.remove();
+  markDirty();
+}
+
+function addExercise(btn) {
+  const row = btn.closest('.add-exercise-row');
+  const prevEx = row.previousElementSibling; // the exercise before this row
+  const card = row.closest('.session-card');
+
+  // Create a new blank exercise block
+  const newEx = document.createElement('div');
+  newEx.className = 'exercise open';
+  newEx.innerHTML = `
+    <div class="exercise-head" onclick="toggle(this)">
+      <span class="exercise-time" data-editable="" contenteditable="${editMode?'true':'false'}" data-placeholder="Время...">0–0</span>
+      <span class="exercise-name" data-editable="" contenteditable="${editMode?'true':'false'}" data-placeholder="Название упражнения...">Новый блок</span>
+      <span class="exercise-tag">—</span>
+      <span class="exercise-chevron">▾</span>
+      <div class="exercise-actions"><button class="ex-btn ex-btn-del" title="Удалить блок" onclick="deleteExercise(this)">−</button></div>
+    </div>
+    <div class="exercise-body">
+      <div class="focus-bar" data-editable="" contenteditable="${editMode?'true':'false'}" data-placeholder="Фокус упражнения..."></div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-n">1</div>
+          <div class="step-text" data-editable="" contenteditable="${editMode?'true':'false'}" data-placeholder="Текст шага..."></div>
+          <div class="step-actions">
+            <button class="step-btn step-btn-del" title="Удалить шаг" onclick="deleteStep(this)">−</button>
+            <button class="step-btn step-btn-add" title="Добавить шаг после" onclick="addStep(this)">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="notes-section">
+        <button class="add-note-btn" onclick="openNoteForm(this)"><span>📌</span> Добавить пометку</button>
+        <div class="note-form">
+          <textarea class="note-textarea" placeholder="Пометка по ходу тренировки..."></textarea>
+          <div class="note-actions">
+            <button class="note-cancel" onclick="closeNoteForm(this)">Отмена</button>
+            <button class="note-save" onclick="saveNote(this)">Сохранить</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  // Add event listeners to new editable elements
+  newEx.querySelectorAll('[data-editable]').forEach(el => {
+    el.addEventListener('click', e => { if (editMode) e.stopPropagation(); });
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); document.execCommand('insertLineBreak'); }
+    });
+    el.addEventListener('input', markDirty);
+  });
+
+  // Insert new exercise after prevEx, before this "add" row
+  row.before(newEx);
+
+  // Insert another "add exercise" row after the new exercise
+  const newRow = document.createElement('div');
+  newRow.className = 'add-exercise-row';
+  newRow.innerHTML = `<button class="add-exercise-btn" onclick="addExercise(this)">+ Добавить блок</button>`;
+  newEx.after(newRow);
+
+  // Focus the exercise name
+  newEx.querySelector('.exercise-name').focus();
+  markDirty();
+}
+
 let editSnapshot = null; // snapshot taken when entering edit mode
 
 function markDirty() {
@@ -2653,20 +2768,38 @@ function cancelConfirmNo() {
 }
 
 function takeSnapshot() {
-  editSnapshot = {};
+  editSnapshot = { steps: {}, cards: {} };
   document.querySelectorAll('.steps').forEach((stepsEl, i) => {
-    editSnapshot[i] = stepsEl.innerHTML;
+    editSnapshot.steps[i] = stepsEl.innerHTML;
+  });
+  document.querySelectorAll('.session-card').forEach((card, i) => {
+    editSnapshot.cards[i] = card.innerHTML;
   });
 }
 
 function restoreSnapshot() {
   if (!editSnapshot) return;
-  const allSteps = document.querySelectorAll('.steps');
-  allSteps.forEach((stepsEl, i) => {
-    if (editSnapshot[i] !== undefined) {
-      stepsEl.innerHTML = editSnapshot[i];
-    }
-  });
+  // Restore full session card HTML (restores exercises + steps + notes)
+  if (editSnapshot.cards) {
+    document.querySelectorAll('.session-card').forEach((card, i) => {
+      if (editSnapshot.cards[i] !== undefined) {
+        card.innerHTML = editSnapshot.cards[i];
+      }
+    });
+    // Re-setup everything after restore
+    setupStepButtons();
+    setupEditableFields();
+    setupNoteSections();
+    assignIds();
+  } else {
+    // Fallback: just restore steps
+    const allSteps = document.querySelectorAll('.steps');
+    allSteps.forEach((stepsEl, i) => {
+      if (editSnapshot.steps && editSnapshot.steps[i] !== undefined) {
+        stepsEl.innerHTML = editSnapshot.steps[i];
+      }
+    });
+  }
   editSnapshot = null;
   // Re-bind input listeners on restored editable fields
   document.querySelectorAll('[data-editable]').forEach(el => {
@@ -2678,7 +2811,7 @@ function restoreSnapshot() {
 function assignIds() {
   // Editable fields
   let fi = 0;
-  document.querySelectorAll('.step-text, .focus-bar, .tip span:last-child, .exercise-name, .week-goal').forEach(el => {
+  document.querySelectorAll('.step-text, .focus-bar, .tip span:last-child, .exercise-name, .week-goal, .session-type').forEach(el => {
     if (!el.dataset.fieldId) el.dataset.fieldId = 'f' + (fi++);
   });
   // Steps containers
@@ -2724,6 +2857,30 @@ function setupEditableFields() {
     el.setAttribute('data-editable', '');
     el.setAttribute('contenteditable', 'false');
     el.setAttribute('data-placeholder', 'Цель недели...');
+  });
+  // Session types (description under day name)
+  document.querySelectorAll('.session-type').forEach(el => {
+    el.setAttribute('data-editable', '');
+    el.setAttribute('contenteditable', 'false');
+    el.setAttribute('data-placeholder', 'Описание тренировки...');
+  });
+
+  // Inject delete buttons into exercise heads (if not already)
+  document.querySelectorAll('.exercise-head').forEach(head => {
+    if (head.querySelector('.exercise-actions')) return;
+    const actions = document.createElement('div');
+    actions.className = 'exercise-actions';
+    actions.innerHTML = `<button class="ex-btn ex-btn-del" title="Удалить блок" onclick="deleteExercise(this)">−</button>`;
+    head.appendChild(actions);
+  });
+
+  // Inject "add exercise" rows after each exercise (if not already)
+  document.querySelectorAll('.exercise').forEach(ex => {
+    if (ex.nextElementSibling && ex.nextElementSibling.classList.contains('add-exercise-row')) return;
+    const row = document.createElement('div');
+    row.className = 'add-exercise-row';
+    row.innerHTML = `<button class="add-exercise-btn" onclick="addExercise(this)">+ Добавить блок</button>`;
+    ex.after(row);
   });
 
   // Prevent toggle collapse when clicking editable in edit mode or week-goal
@@ -2894,7 +3051,7 @@ function showStatus(msg, ok) {
 async function publishPage() {
   if (!db) { showStatus('⚠️ Нет подключения к БД', false); return; }
   try {
-    const data = { fields: {}, steps: {}, notes: {} };
+    const data = { fields: {}, steps: {}, notes: {}, exercises: {} };
 
     // Collect editable fields
     document.querySelectorAll('[data-field-id]').forEach(el => {
@@ -2902,7 +3059,6 @@ async function publishPage() {
     });
     // Collect steps containers
     document.querySelectorAll('[data-steps-id]').forEach(el => {
-      // Save steps HTML without action buttons (they are added by JS)
       const clone = el.cloneNode(true);
       clone.querySelectorAll('.step-actions').forEach(a => a.remove());
       data.steps[el.dataset.stepsId] = clone.innerHTML;
@@ -2910,6 +3066,15 @@ async function publishPage() {
     // Collect notes
     document.querySelectorAll('[data-notes-id]').forEach(el => {
       data.notes[el.dataset.notesId] = el.innerHTML;
+    });
+    // Collect exercise structure per session card
+    document.querySelectorAll('.session-card[id]').forEach(card => {
+      const clone = card.cloneNode(true);
+      // Remove injected UI elements before saving
+      clone.querySelectorAll('.exercise-actions, .add-exercise-row, .step-actions, .notes-section').forEach(el => el.remove());
+      // Save only the exercises HTML
+      const exHtml = Array.from(clone.querySelectorAll('.exercise')).map(ex => ex.outerHTML).join('');
+      data.exercises[card.id] = exHtml;
     });
 
     const ref = window._fsDoc(db, 'page', 'content');
