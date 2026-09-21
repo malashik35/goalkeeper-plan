@@ -403,6 +403,10 @@ body.edit-mode .add-exercise-row{display:block}
 body.edit-mode .session-type[data-editable]{
   outline:1px dashed var(--accent-dim);border-radius:4px;padding:0 4px;
 }
+/* exercise-time editable */
+body.edit-mode .exercise-time[data-editable]{
+  outline:1px dashed var(--accent-dim);cursor:text;
+}
 
 .reps-row{
   display:flex;
@@ -2811,7 +2815,7 @@ function restoreSnapshot() {
 function assignIds() {
   // Editable fields
   let fi = 0;
-  document.querySelectorAll('.step-text, .focus-bar, .tip span:last-child, .exercise-name, .week-goal, .session-type').forEach(el => {
+  document.querySelectorAll('.step-text, .focus-bar, .tip span:last-child, .exercise-name, .exercise-time, .week-goal, .session-type').forEach(el => {
     if (!el.dataset.fieldId) el.dataset.fieldId = 'f' + (fi++);
   });
   // Steps containers
@@ -2851,6 +2855,12 @@ function setupEditableFields() {
     el.setAttribute('data-editable', '');
     el.setAttribute('contenteditable', 'false');
     el.setAttribute('data-placeholder', 'Название упражнения...');
+  });
+  // Exercise time labels
+  document.querySelectorAll('.exercise-time').forEach(el => {
+    el.setAttribute('data-editable', '');
+    el.setAttribute('contenteditable', 'false');
+    el.setAttribute('data-placeholder', '0–0');
   });
   // Week goals
   document.querySelectorAll('.week-goal').forEach(el => {
