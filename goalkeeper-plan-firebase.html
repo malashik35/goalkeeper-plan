@@ -2895,10 +2895,14 @@ function setupEditableFields() {
 
   // Prevent toggle collapse when clicking editable in edit mode or week-goal
   document.querySelectorAll('[data-editable]').forEach(el => {
+    if (el._editListenersAttached) return; // avoid duplicate listeners
+    el._editListenersAttached = true;
     el.addEventListener('click', e => {
-      if (editMode || el.classList.contains('week-goal')) e.stopPropagation();
+      if (editMode || el.classList.contains('week-goal')) {
+        e.stopPropagation();
+        if (editMode && el.getAttribute('contenteditable') === 'true') el.focus();
+      }
     });
-    // Prevent Enter adding <div> — use Shift+Enter for line break
     el.addEventListener('keydown', e => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
